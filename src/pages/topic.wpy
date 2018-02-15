@@ -1,0 +1,305 @@
+/**
+* Created by lijiaming on 2017/12/27.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  .index-container {
+    /*专题介绍*/
+    .top-container {
+      background-color: #ffffff;
+      .top {
+        .image {
+          width: 100%;
+          height: 400rpx;
+        }
+        .title {
+          margin: -80rpx 30rpx 30rpx 30rpx;
+          color: #ffffff;
+          font-size: 36rpx;
+          max-width: 600rpx;
+          word-break: keep-all;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+      .des {
+        padding: 10rpx 10rpx 20rpx 10rpx;
+        color: #aeaeae;
+        font-size: 24rpx;
+        border-bottom: 1rpx solid #e3e3e3;
+      }
+      .bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10rpx;
+        .headers {
+          .image {
+            margin: 10rpx 15rpx 10rpx 0rpx;
+            width: 60rpx;
+            height: 60rpx;
+            border-radius: 50%;
+          }
+        }
+        .text {
+          font-size: 28rpx;
+          color: #626262;
+        }
+      }
+    }
+    /*专题的文章*/
+    .content-container {
+      .item {
+        margin-top: 10rpx;
+        padding: 20rpx;
+        background-color: #ffffff;
+        font-size: 26rpx;
+        .top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .auth {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .image {
+              width: 40rpx;
+              height: 40rpx;
+              border-radius: 50%;
+            }
+            .name-time {
+              margin-left: 20rpx;
+              color: #a7a7a7;
+              font-weight: 200;
+            }
+          }
+          .more {
+            width: 30rpx;
+            height: 30rpx;
+          }
+        }
+        .title {
+          margin-top: 15rpx;
+          font-size: 36rpx;
+          font-weight: 600;
+        }
+        .article {
+          margin-top: 10rpx;
+          color: #656565;
+        }
+        .bottom {
+          margin-top: 10rpx;
+          font-weight: 400;
+          color: #a7a7a7;
+        }
+      }
+    }
+    /*动效*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+      <!--顶部-->
+      <view class="top-container">
+        <view class="top">
+          <block wx:if="{{showTopic.images}}">
+            <image class="image" src="{{showTopic.images.url}}" />
+          </block>
+          <block wx:else>
+            <image class="image" src="../assets/images/test.jpg"/>
+          </block>
+
+          <view class="title">{{showTopic.name}}</view>
+        </view>
+        <block wx:if="{{showTopic.des}}">
+          <view class="des">{{showTopic.des}}</view>
+        </block>
+        <block wx:else>
+          <view class="des">暂无</view>
+        </block>
+        <view class="bottom">
+          <view class="headers">
+            <block wx:if="{{showTopic.post_topics_count > 0}}">
+              <block  wx:for="{{showTopic.posts}}" wx:key="unique" wx:for-index="idPost" wx:for-item="itemPost">
+                <image class="image" src="{{itemPost.user_info.avatar}}"/>
+              </block>
+            </block>
+            <block wx:else>
+              <view class="text">暂无</view>
+            </block>
+          </view>
+          <view class="text">活跃讨论者</view>
+        </view>
+      </view>
+      <!--顶部-->
+
+      <!--内容-->
+      <view class="content-container">
+        <blcok wx:for="{{topicPost}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+          <view class="item" bindtap="clickPost" data-id="{{item.id}}">
+            <view class="top">
+              <view class="auth">
+                <image class="image" src="{{item.user_info.avatar}}"/>
+                <view class="name-time">{{item.user_info.name}} · {{item.time}}</view>
+              </view>
+              <image class="more" src="../assets/images/more.svg"/>
+            </view>
+            <view class="title">{{item.title}}</view>
+            <view class="article">{{item.content}}</view>
+            <view class="bottom">
+              <view class="des">{{item.zans_count}} 赞 · {{item.comments_count}} 评论 · 去看看</view>
+            </view>
+          </view>
+        </blcok>
+      </view>
+      <!--内容-->
+    </block>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetShowTopicRedux, apiFetchGetTopicPostRedux} from '../redux/topic/actions'
+  import store from '../store'
+
+  export default class Topic extends wepy.page {
+    config = {
+      navigationBarTitleText: '专题',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+
+    data = {
+      isLoading: true, // 是否在loading数据
+      showTopic: '',
+      topicPost: []
+    }
+
+    // 加载
+    async onLoad(e) {
+      const that = this
+      that.id = e.id
+      await that.getShowTopic()
+      await that.getTopicPost()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+    }
+
+    // 下拉 刷新
+    async onPullDownRefresh() {
+      const that = this
+      that.isLoading = true
+      await that.getShowTopic()
+      await that.getTopicPost()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+      wepy.stopPullDownRefresh()
+    }
+
+    methods = {
+      // 跳转文章 post
+      async clickPost (e) {
+        let id = e.currentTarget.dataset.id
+        util.wxGoTo.navigateTo(`./post?id=${id}`)
+      }
+    }
+
+    // 获取专题详情
+    async getShowTopic () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetShowTopicRedux({
+        token: wepy.getStorageSync('token'),
+        id: that.id
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.showTopic = state.topic.showTopic
+      }
+      that.$apply()
+    }
+
+    // 获取专题文章
+    async getTopicPost () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetTopicPostRedux({
+        token: wepy.getStorageSync('token'),
+        id: that.id
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.topicPost = state.topic.topicPost
+      }
+      that.$apply()
+    }
+  }
+</script>

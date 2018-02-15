@@ -1,0 +1,321 @@
+/**
+* Created by lijiaming on 2017/12/27.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  page {
+    background-color: #ffffff;
+    color: #0e0e0e;
+  }
+  .index-container {
+    padding: 20rpx;
+    .top-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      border-bottom: 1rpx solid #e5e5e5;
+      .header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 20rpx;
+        .image {
+          width: 100rpx;
+          height: 100rpx;
+          border-radius: 50%;
+        }
+        .text {
+          margin-top: 10rpx;
+          font-size: 28rpx;
+          color: #a3a3a3;
+          text-align: center;
+        }
+      }
+      .text {
+        width: 100%;
+        .name, .des {
+          font-size: 28rpx;
+          color: #a3a3a3;
+          padding: 10rpx;
+          border-bottom: 1rpx solid #e5e5e5;
+        }
+      }
+    }
+    .sex-container {
+      margin-top: 20rpx;
+      padding-bottom: 20rpx;
+      border-bottom: 1rpx solid #e5e5e5;
+      font-size: 28rpx;
+      .sex-title {
+        padding-right: 20rpx;
+        border-right: 1rpx solid #e5e5e5;
+      }
+      .sex-select {
+        padding-left: 20rpx;
+        color: #a3a3a3;
+      }
+    }
+    .remark-container {
+      margin-top: 20rpx;
+      .textarea {
+        font-size: 28rpx;
+        color: #a3a3a3;
+        width: 100%;
+        height: 300rpx;
+      }
+    }
+    .button-container {
+      position: fixed;
+      bottom: 0;
+      width: 95%;
+      display: flex;
+      justify-content: center;
+      .button-able, .button-disabled {
+        width: 100%;
+        border-radius: 50rpx;
+        text-align: center;
+      }
+      .button-able {
+        background-color: #619ff8;
+        color: #ffffff;
+      }
+      .button-disabled {
+        background-color: #f0f0f0;
+        color: #4c4c4c;
+      }
+    }
+    /*动效*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+      <view class="top-container">
+        <view class="header" bindtap="clickImage">
+          <image class="image" src="{{avatar}}"/>
+          <view class="text">编辑</view>
+        </view>
+        <view class="text">
+          <input placeholder="昵称" value="{{name}}" class="name" bindinput="inputName"/>
+          <input placeholder="一句话介绍自己" value="{{des}}" class="des" bindinput="inputDes"/>
+        </view>
+      </view>
+      <view class="sex-container">
+        <picker value="{{indexSex}}" range="{{arraySex}}" bindchange="selectSex">
+          <text class="sex-title">性别</text><text class="sex-select">{{arraySex[indexSex]}}</text>
+        </picker>
+      </view>
+      <view class="remark-container">
+        <textarea class="textarea" placeholder="备注" value="{{note}}" bindinput="inputNote"/>
+      </view>
+      <view class="button-container">
+        <block wx:if="{{!disableUpload}}">
+          <button class="button-able" bindtap="clickUpdate">提交</button>
+        </block>
+        <block wx:else>
+          <button class="button-disabled" disabled="true" >正在上传</button>
+        </block>
+      </view>
+    </block>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetUserInfoRedux, apiFetchUpdateUserInfoRedux} from '../redux/user/actions'
+  import {apiFetchUploadImageRedux} from '../redux/image/actions'
+  import store from '../store'
+  import {connect, setStore} from 'wepy-redux'
+
+  setStore(store)
+  @connect({
+  }, {
+    apiFetchUpdateUserInfoRedux
+  })
+
+  export default class Setting extends wepy.page {
+    config = {
+      navigationBarTitleText: '编辑',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      disableScroll: true
+    }
+    data = {
+      isLoading: true,
+      disableUpload: false,
+      id: '', // 序号
+      name: '', // 名称
+      avatar: '', // 头像
+      des: '', // 描述
+      indexSex: '', // 性别
+      arraySex: ['男', '女'],
+      note: '' // 备注
+    }
+
+    // 加载
+    async onLoad(e) {
+      const that = this
+      that.id = e.id
+      await that.getUserInfo()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+    }
+
+    // 拉取用户信息
+    async getUserInfo () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetUserInfoRedux({
+        token: wepy.getStorageSync('token'),
+        id: that.id,
+        showType: 'edit'
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.name = state.user.userInfoDraft.name
+        that.avatar = state.user.userInfoDraft.avatar
+        that.des = state.user.userInfoDraft.des
+        that.indexSex = state.user.userInfoDraft.sex
+        that.note = state.user.userInfoDraft.note
+      }
+      that.$apply()
+    }
+
+    // 动作
+    methods = {
+      // 增加图片
+      async clickImage () {
+        const that = this
+        const chooseImage = await util.wxGetInfo.chooseImagePromise()
+        that.avatar = chooseImage.tempFilePaths
+        that.disableUpload = true
+        that.$apply()
+        that.uploadImage(chooseImage.tempFilePaths[0])
+      },
+      // 保存
+      async clickUpdate () {
+        const that = this
+        that.updateUserInfo()
+      },
+      // 获取输入
+      async inputName (event) {
+        this.name = event.detail.value
+      },
+      async inputDes (event) {
+        this.des = event.detail.value
+      },
+      async inputNote (event) {
+        this.note = event.detail.value
+      },
+      // 选择
+      async selectSex (event) {
+        this.indexSex = event.detail.value
+      }
+    }
+
+    /*
+     * 上传图片
+     */
+    async uploadImage (img) {
+      const that = this
+      const res = await store.dispatch(apiFetchUploadImageRedux({
+        token: wepy.getStorageSync('token'),
+        filePath: img,
+        type: 'header'
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        that.avatar = res.data.message.url
+        that.disableUpload = false
+        that.$apply()
+      }
+    }
+
+    /*
+     * 保存资料
+     */
+    async updateUserInfo () {
+      const that = this
+      const res = await store.dispatch(apiFetchUpdateUserInfoRedux({
+        token: wepy.getStorageSync('token'),
+        id: that.id,
+        name: that.name,
+        avatar: that.avatar,
+        sex: that.indexSex,
+        des: that.des,
+        note: that.note
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        await util.wxToast.success(1000, res.data.message.result)
+        await util.common.sleepPromise(1)
+        await util.wxGoTo.navigateBack(1)
+      }
+    }
+  }
+</script>

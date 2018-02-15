@@ -1,0 +1,317 @@
+/**
+* Created by lijiaming on 2018/1/13.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  page {
+    background-color: #ffffff;
+    color: #0e0e0e;
+  }
+  .index-container{
+    padding: 20rpx;
+    .top-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      border-bottom: 1rpx solid #e5e5e5;
+      .header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 20rpx;
+        .image {
+          width: 100rpx;
+          height: 100rpx;
+          border-radius: 50%;
+        }
+        .text {
+          margin-top: 10rpx;
+          font-size: 28rpx;
+          color: #a3a3a3;
+          text-align: center;
+        }
+      }
+      .text {
+        width: 100%;
+        .name, .des {
+          font-size: 28rpx;
+          color: #a3a3a3;
+          padding: 10rpx;
+          border-bottom: 1rpx solid #e5e5e5;
+        }
+      }
+    }
+    .sex-container {
+      margin-top: 20rpx;
+      padding-bottom: 20rpx;
+      border-bottom: 1rpx solid #e5e5e5;
+      font-size: 28rpx;
+      .sex-title {
+        padding-right: 20rpx;
+        border-right: 1rpx solid #e5e5e5;
+      }
+      .sex-select {
+        padding-left: 20rpx;
+        color: #a3a3a3;
+      }
+    }
+    .remark-container {
+      margin-top: 20rpx;
+      rich-text {
+        font-size: 28rpx;
+        color: #a3a3a3;
+        width: 100%;
+        height: 300rpx;
+      }
+    }
+    .button-container {
+      position: fixed;
+      bottom: 0;
+      width: 95%;
+      display: flex;
+      justify-content: center;
+      margin: 0 auto;
+      .button {
+        width: 100%;
+        background-color: #619ff8;
+        border-radius: 50rpx;
+        color: #ffffff;
+        text-align: center;
+      }
+    }
+    /*动效*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+    <view class="index-container">
+
+      <block wx:if="{{isLoading}}">
+        <div class="loading-container">
+          <div class="dot1"></div>
+          <div class="dot2"></div>
+        </div>
+      </block>
+
+      <block wx:if="{{!isLoading}}">
+        <view class="top-container">
+          <view class="header">
+            <image class="image" src="{{userInfo.avatar}}"/>
+            <block wx:if="{{userInfo.isUser}}">
+              <view class="text" bindtap="clickEdit">编辑</view>
+            </block>
+            <block wx:else>
+              <block wx:if="{{userInfo.hasStar}}">
+                <view class="text">已关注</view>
+              </block>
+              <block wx:else>
+                <view class="text">未关注</view>
+              </block>
+            </block>
+          </view>
+          <view class="text">
+            <view class="name">{{userInfo.name}}</view>
+            <block wx:if="{{userInfo.des}}">
+              <view class="des">{{userInfo.des}}</view>
+            </block>
+            <block wx:else>
+              <view class="des">暂无</view>
+            </block>
+          </view>
+        </view>
+        <view class="sex-container">
+            <text class="sex-title">性别</text>
+            <block wx:if="{{userInfo.sex == 0}}">
+              <text class="sex-select">男</text>
+            </block>
+            <block wx:else>
+              <text class="sex-select">女</text>
+            </block>
+        </view>
+        <view class="remark-container">
+          <block wx:if="{{userInfo.note}}">
+            <rich-text class="text" nodes="{{userInfo.html}}"></rich-text>
+          </block>
+          <block wx:else>
+            <rich-text class="text" nodes="暂无"></rich-text>
+          </block>
+        </view>
+        <view class="button-container">
+          <block wx:if="{{userInfo.isUser}}">
+            <button class="button" bindtap="clickEdit">编辑</button>
+          </block>
+          <block wx:else>
+            <block wx:if="{{userInfo.hasStar}}">
+              <button class="button" bindtap="clickFan">取消关注</button>
+            </block>
+            <block wx:else>
+              <button class="button" bindtap="clickFan">关注</button>
+            </block>
+          </block>
+        </view>
+      </block>
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import util from '../utils/util'
+    import {apiFetchGetUserInfoRedux, apiFetchFanRedux, apiFetchUnFanRedux} from '../redux/user/actions'
+    import store from '../store'
+    import {connect, setStore} from 'wepy-redux'
+
+    setStore(store)
+    @connect({
+      showInfo: (state) => state.user.showInfo
+    }, {
+      apiFetchUnFanRedux
+    })
+
+    export default class Show extends wepy.page {
+      config = {
+        navigationBarTitleText: '个人资料',
+        navigationBarBackgroundColor: '#ffffff',
+        navigationBarTextStyle: 'black',
+        enablePullDownRefresh: true
+      }
+      data = {
+        id: 0,
+        userInfo: '',
+        isLoading: true
+      }
+      // 加载
+      async onLoad(e) {
+        const that = this
+        that.id = e.id
+        await that.getUserInfo()
+        // 关闭loading动画
+        that.isLoading = false
+        that.$apply()
+      }
+
+      // 下拉 刷新
+      async onPullDownRefresh() {
+        const that = this
+        that.isLoading = true
+        await that.getUserInfo()
+        // 关闭loading动画
+        that.isLoading = false
+        that.$apply()
+        wepy.stopPullDownRefresh()
+      }
+
+      // 拉取用户信息
+      async getUserInfo () {
+        const that = this
+        const res = await store.dispatch(apiFetchGetUserInfoRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.id,
+          showType: 'show'
+        }))
+
+        // 获取数据
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          const state = store.getState()
+          that.userInfo = state.user.showInfo
+        }
+        that.$apply()
+      }
+
+      // 动作
+      methods = {
+        // 关注 / 取消关注
+        async clickFan () {
+          const that = this
+          if (that.userInfo.hasStar) {
+            that.unFan()
+          } else {
+            that.fan()
+          }
+        },
+        // 点击编辑
+        async clickEdit () {
+          const that = this
+          await util.wxGoTo.navigateTo(`./setting?id=${that.id}`)
+        }
+      }
+
+      async fan () {
+        const that = this
+        const res = await store.dispatch(apiFetchFanRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.userInfo.id
+        }))
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          util.wxToast.success(1000, res.data.message)
+          that.userInfo.hasStar = true
+          that.$apply()
+        }
+      }
+
+      async unFan () {
+        const that = this
+        const res = await store.dispatch(apiFetchUnFanRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.userInfo.id
+        }))
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          util.wxToast.success(1000, res.data.message)
+          that.userInfo.hasStar = false
+          that.$apply()
+        }
+      }
+    }
+</script>

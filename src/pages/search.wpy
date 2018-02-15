@@ -1,0 +1,452 @@
+<style lang="less" rel="stylesheet/less">
+
+  page {
+    background-color: #ffffff;
+    color: #0e0e0e;
+  }
+
+  .index-container {
+
+    /*搜索框*/
+    .search-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 10rpx 0rpx;
+      background-color: #ffffff;
+      border-bottom: 1rpx solid #ebebeb;
+      /*搜索*/
+      .search {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+        height: 36rpx;
+        padding: 8rpx 0;
+        background-color: #ebebeb;
+        border-radius: 10rpx;
+        .search-image {
+          width: 30rpx;
+          height: 30rpx;
+          margin-right: 20rpx;
+        }
+        .search-text {
+          font-size: 28rpx;
+          color: #969696;
+          max-width: 400rpx;
+          word-break: keep-all;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: center;
+        }
+      }
+      /*发表*/
+      .post {
+        width: 15%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .post-image {
+          width: 30rpx;
+          height: 30rpx;
+          margin-right: 10rpx;
+        }
+        .post-text {
+          font-size: 28rpx;
+          color: #2984f3;
+        }
+      }
+    }
+
+    /*热门搜索， 个人搜索记录*/
+    .hot-container, .my-container {
+      margin-top: 15rpx;
+      padding: 15rpx;
+      .title {
+        color: black;
+        font-weight: 800;
+        margin-bottom: 10rpx;
+        padding-left: 20rpx;
+      }
+      .content {
+        white-space: pre-line;
+        word-wrap: break-word;
+        .item {
+          display: inline-block;
+          margin: 10rpx;
+          padding: 10rpx 30rpx;
+          border-radius: 40rpx;
+          font-size: 36rpx;
+          font-weight: 400;
+          color: #5d5d5d;
+          background-color: #f6f6f6;
+          .item-inner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .image {
+              margin-right: 10rpx;
+              width: 30rpx;
+              height: 30rpx;
+            }
+            .text {
+              max-width: 200rpx;
+              word-break: keep-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+    }
+
+    /*搜索内容*/
+    .search-info-container {
+      .post, .comment {
+        margin-top: 10rpx;
+        padding: 20rpx;
+        background-color: #ffffff;
+        font-size: 26rpx;
+        border-bottom: 1rpx solid #ebebeb;
+        .top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .auth {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .image {
+              width: 40rpx;
+              height: 40rpx;
+              border-radius: 50%;
+            }
+            .name-time {
+              margin-left: 20rpx;
+              color: #a7a7a7;
+              font-weight: 200;
+            }
+          }
+          .more {
+            width: 30rpx;
+            height: 30rpx;
+          }
+        }
+        .title, .content, {
+          word-break: keep-all;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .title {
+          margin-top: 15rpx;
+          font-size: 36rpx;
+          font-weight: 600;
+          word-break: keep-all;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .content {
+          margin-top: 10rpx;
+          color: #656565;
+          word-break: keep-all;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .main-post {
+          padding: 10rpx;
+          background-color: #e2e2e2;
+        }
+      }
+    }
+
+    /*loading*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <!--搜索-->
+    <view class="search-container">
+      <view class="search">
+        <input class="search-text" placeholder="请输入搜索内容" value="{{search}}" bindinput="inputSearch"/>
+      </view>
+      <view class="post" bindtap="clickSearch">
+        <image class="post-image" src="../assets/images/search.svg"></image>
+        <view class="post-text">搜索</view>
+      </view>
+    </view>
+    <!--搜索-->
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading && !isSearch}}">
+      <view class="hot-container">
+        <view class="title">AC热搜</view>
+        <view class="content">
+          <view wx:for="{{indexSearch}}" wx:key="unique" class="item" wx:for-index="id" wx:for-item="item">
+            <view class="item-inner">
+              <image class="image" src="../assets/images/hot.svg"></image>
+              <view class="text">{{item.keyword}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="my-container">
+        <view class="title">个人搜索记录</view>
+        <view class="content">
+          <view wx:for="{{myselfSearch}}" wx:key="unique" class="item" wx:for-index="id" wx:for-item="item">
+            <view class="item-inner">
+              <view class="text">{{item.search_info}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:if="{{!isLoading && isSearch}}">
+      <view class="search-info-container">
+
+        <!--发帖-->
+        <blcok wx:for="{{searchPostComment}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+          <block wx:if="{{item.class_name == 'post'}}">
+            <view class="post" bindtap="clickPost" data-id="{{item.post_id}}">
+              <view class="top">
+                <view class="auth">
+                  <image class="image" src="{{item.user_info.avatar}}"/>
+                  <view class="name-time">{{item.user_info.name}} · {{item.time}}</view>
+                </view>
+                <image class="more" src="../assets/images/more.svg"/>
+              </view>
+              <view class="title">{{item.title}}</view>
+              <view class="content">{{item.content}}</view>
+            </view>
+          </block>
+
+          <!--评论-->
+          <block wx:if="{{item.class_name == 'comment'}}">
+            <view class="comment" bindtap="clickPost" data-id="{{item.post_id}}">
+              <view class="top">
+                <view class="auth">
+                  <image class="image" src="{{item.user_info.avatar}}"/>
+                  <view class="name-time">{{item.user_info.name}} · {{item.time}}</view>
+                </view>
+                <image class="more" src="../assets/images/more.svg"/>
+              </view>
+              <view class="content">{{item.content}}</view>
+              <view class="main-post">
+                <view class="top">
+                  <view class="auth">
+                    <image class="image" src="{{item.user_info.avatar}}"/>
+                    <view class="name-time">{{item.user_info.name}} · {{item.time}}</view>
+                  </view>
+                  <image class="more" src="../assets/images/more.svg"/>
+                </view>
+                <view class="title">{{item.main_post.title}}</view>
+                <view class="content">{{item.main_post.content}}</view>
+              </view>
+            </view>
+          </block>
+        </blcok>
+      </view>
+    </block>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetIndexSearchMoreRedux, apiFetchSearchPostCommentRedux} from '../redux/search/actions'
+  import {apiFetchSearchRedux} from '../redux/user/actions'
+  import store from '../store'
+
+  export default class Search extends wepy.page {
+    config = {
+      navigationBarTitleText: '搜索',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+    data = {
+      isLoading: true, // loading
+      isSearch: false, // searching
+      indexSearch: [], // 热门搜索记录
+      myselfSearch: [], // 个人搜索记录
+      searchPostComment: [], // 返回搜索内容
+      page: 1,
+      size: 10,
+      search: '' // 搜索内容
+    }
+    async onLoad() {
+      const that = this
+      await that.getIndexSearch()
+      await that.getMyselfSearch()
+      that.isLoading = false
+      that.$apply()
+    }
+
+    // 上拉 拉去更多数据
+    async onReachBottom() {
+      const that = this
+      that.page = that.page + 1
+      that.searchInfo(that.page, that.size)
+    }
+
+    // 下拉 刷新
+    async onPullDownRefresh() {
+      const that = this
+      if (that.search !== '') {
+        await that.searchInfo(1, that.size)
+      }
+      wepy.stopPullDownRefresh()
+    }
+
+    // 热门搜索
+    async getIndexSearch () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetIndexSearchMoreRedux({
+        token: wepy.getStorageSync('token'),
+        num: 10
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.indexSearch = state.search.indexSearchMore
+      }
+      that.$apply()
+    }
+
+    // 个人搜索记录
+    async getMyselfSearch () {
+      const that = this
+      const res = await store.dispatch(apiFetchSearchRedux({
+        token: wepy.getStorageSync('token'),
+        num: 5
+      }))
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.myselfSearch = state.user.userSearch
+      }
+      that.$apply()
+    }
+
+    methods = {
+      // 点击搜索
+      async clickSearch () {
+        const that = this
+        await that.searchInfo(that.page, that.size)
+      },
+      // 搜索内容
+      async inputSearch (e) {
+        const that = this
+        that.search = e.detail.value
+        that.page = 1
+        if (this.search === '') {
+          that.isSearch = false
+        }
+      },
+      // 跳转文章 post
+      async clickPost (e) {
+        let id = e.currentTarget.dataset.id
+        util.wxGoTo.navigateTo(`./post?id=${id}`)
+      }
+    }
+
+    // 查询数据
+    async searchInfo (page, size) {
+      const that = this
+      const res = await store.dispatch(apiFetchSearchPostCommentRedux({
+        token: wepy.getStorageSync('token'),
+        page: page - 1,
+        size: size,
+        searchInfo: that.search
+      }))
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        if (res.data.message.length === 0 && page === 1) {
+          // 没有查找相关数据
+          that.searchPostComment = []
+          util.wxToast.loading(1000, '查找不到数据')
+        } else if (res.data.message.length === 0) {
+          return
+        } else {
+          if (page === 1) {
+            that.searchPostComment = res.data.message
+          } else {
+            const newIndex = that.searchPostComment
+            newIndex.push(...res.data.message)
+            that.searchPostComment = newIndex
+          }
+        }
+        that.isSearch = true
+        that.$apply()
+      }
+    }
+  }
+</script>

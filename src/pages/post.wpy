@@ -1,0 +1,689 @@
+/**
+* Created by lijiaming on 2017/12/26.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  page {
+    background-color: #ffffff;
+    color: #0e0e0e;
+  }
+  .index-container {
+    width: 100%;
+    /*标题*/
+    .title-container {
+      position: fixed;
+      top: 0;
+      z-index: 10;
+      width: 95%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20rpx;
+      border-top: 1rpx solid #ebebeb;
+      border-bottom: 10rpx solid #ebebeb;
+      font-size: 38rpx;
+      font-weight: 600;
+      color: #1d1d1d;
+      background-color: #ffffff;
+      .text {
+        max-width: 400rpx;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    /*作者*/
+    .auth-container {
+      margin-top: 110rpx;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10rpx 20rpx;
+      border-bottom: 5rpx solid #ebebeb;
+      .left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .image {
+          width: 70rpx;
+          height: 70rpx;
+          border-radius: 50%;
+        }
+        .name-des {
+          margin-left: 20rpx;
+          .name {
+            font-size: 30rpx;
+            font-weight: 500;
+            color: #2f2f2f;
+            max-width: 440rpx;
+            word-break: keep-all;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .des {
+            font-size: 30rpx;
+            color: #4c4c4c;
+            max-width: 440rpx;
+            word-break: keep-all;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+      .right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10rpx 20rpx;
+        border-radius: 10rpx;
+        border: 1px solid #70a2f8;
+        .image {
+          width: 30rpx;
+          height: 30rpx;
+          margin-right: 5rpx;
+        }
+        .text {
+          font-size: 26rpx;
+          color: #70a2f8;
+        }
+        .fan, .edit {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+    /*内容*/
+    .post-container {
+      margin-top: 5rpx;
+      padding: 10rpx 20rpx 100rpx 20rpx;
+      .text {
+        white-space:pre-line;
+        word-wrap: break-word;
+      }
+      .images {
+        display: flex;
+        image {
+          width: 130rpx;
+          height: 130rpx;
+          margin-right: 12rpx;
+        }
+      }
+    }
+    /*顶部栏*/
+    .button-container {
+      position: fixed;
+      bottom: 0;
+      z-index: 10;
+      width: 100%;
+      height: 90rpx;
+      background-color: #ffffff;
+      border-top: 3rpx solid #ebebeb;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        .image {
+          width: 40rpx;
+          height: 40rpx;
+        }
+        .text {
+          font-size: 24rpx;
+          color: #bfbfbf;
+        }
+      }
+    }
+    /*loading*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+
+    .share-wrapper{
+      position: fixed;
+      top:0;
+      right:0;
+      bottom: 0;
+      left:0;
+      background: linear-gradient(to bottom, rgba(227, 234, 243, 0) 60%, rgba(227, 234, 243,1));
+      opacity: 0;
+      z-index: 10000000000;
+      visibility: hidden;
+    }
+    .share-wrapper.active{
+      animation: fadeIn 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .share-wrapper.fade{
+      animation: fadeOut 0.3s;
+      animation-fill-mode: forwards;
+    }
+    .share-action-sheet{
+      position: fixed;
+      z-index: 10000000001;
+      left:30rpx;
+      right: 30rpx;
+      bottom: 40rpx;
+      border-radius: 20rpx;
+      overflow: hidden;
+      background: rgb(239,239,244);
+      transform: translateY(130%);
+      -webkit-transform: translateY(130%);
+      transition: transform 0.3s ease;
+      box-shadow: 0 0 20rpx rgba(0,0,0,0.05);
+    }
+    .share-action-sheet.active{
+      transform: translateY(0);
+    }
+    .share-action-sheet .share-item{
+      border: none;
+      border-radius:0;
+      margin-bottom: 1px;
+      height:100rpx;
+      line-height:100rpx;
+      font-size:32rpx;
+    }
+    .share-action-sheet .share-item:after {
+      content: normal;
+    }
+
+    .shareButtonHover{
+      background: #185edf !important;
+    }
+    .shareButton{
+      position: absolute;
+      top:50rpx;
+      right: 40rpx;
+      color: transparent;
+      background: #256df2;
+      border-radius:80rpx;
+      width: 80rpx;
+      height:80rpx;
+
+      border: none;
+      image{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 35rpx;
+        height: 35rpx;
+      }
+      &:after{
+        content: normal;
+      }
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        visibility: hidden;
+      }
+      to {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        visibility: visible;
+      }
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+</style>
+
+<template>
+
+    <view class="index-container">
+
+      <block wx:if="{{isLoading}}">
+        <div class="loading-container">
+          <div class="dot1"></div>
+          <div class="dot2"></div>
+        </div>
+      </block>
+
+      <block wx:if="{{!isLoading}}">
+        <view class="title-container">
+          <view class="text">{{showPost.title}}</view>
+        </view>
+
+        <view class="auth-container">
+          <view class="left">
+            <image class="image" src="../assets/images/test.jpg"/>
+            <view class="name-des">
+              <view class="name">{{showPost.user.name}}</view>
+              <block wx:if="{{showPost.user.des}}">
+                <view class="des">{{showPost.user.des}}</view>
+              </block>
+              <block wx:else>
+                <view class="des">暂无</view>
+              </block>
+            </view>
+          </view>
+          <view class="right">
+            <view wx:if="{{showPost.isPoster}}" class="edit">
+              <view class="text" bindtap="clickEdit">编辑</view>
+              <view class="text">|</view>
+              <view class="text" bindtap="clickDelete">删除</view>
+            </view>
+            <view wx:else  class="fan" bindtap="clickFan">
+              <block wx:if="{{showPost.isFan}}">
+                <image class="image" src="../assets/images/add.svg"/>
+                <view class="text">取消关注</view>
+              </block>
+              <block wx:else>
+                <image class="image" src="../assets/images/add.svg"/>
+                <view class="text">关注</view>
+              </block>
+            </view>
+          </view>
+        </view>
+
+        <view class="post-container">
+          <rich-text class="text" nodes="{{showPost.html}}"></rich-text>
+          <view class="images">
+            <block wx:for="{{showPost.images}}" wx:key="unique" wx:for-index="id" wx:for-item="item" class="images">
+            <image src="{{item}}"/>
+            </block>
+          </view>
+        </view>
+
+        <view class="button-container">
+          <view class="item" bindtap="clickShare">
+            <image class="image" src="../assets/images/test.jpg"/>
+            <view class="text">分享</view>
+          </view>
+          <view class="item" bindtap="clickZan">
+            <block wx:if="{{showPost.isZan}}">
+              <image class="image" src="../assets/images/test.jpg"/>
+              <view class="text">取消点赞·{{showPost.zans_count}}</view>
+            </block>
+            <block wx:else>
+              <image class="image" src="../assets/images/test.jpg"/>
+              <view class="text">点赞·{{showPost.zans_count}}</view>
+            </block>
+          </view>
+          <view class="item" bindtap="clickReply">
+            <image class="image" src="../assets/images/test.jpg"/>
+            <view class="text">回复</view>
+          </view>
+          <view class="item" bindtap="clickReplies">
+            <image class="image" src="../assets/images/test.jpg"/>
+            <view class="text">评论·{{showPost.comments_count}}</view>
+          </view>
+        </view>
+      </block>
+
+
+      <view class="share-wrapper {{showShareActionSheet?'active':''}} {{fadeOutWrapper?'fade':''}}" bindtap="hideShareActionSheet"></view>
+      <view class="share-action-sheet {{showShareActionSheet?'active':''}}">
+        <button class="share-item" open-type="share" bindtap="hideShareActionSheet">转发</button>
+        <button class="share-item" bindtap="handleMomentsShareTap">生成朋友圈分享图</button>
+        <button class="share-item" bindtap="handleSaveQRCodeTap">生成二维码</button>
+      </view>
+
+      <canvas canvas-id="QrcodeWithAvatarCanvas" style="width: 430px;height: 430px;position: absolute;left: -999999px;top: -999999px;" />
+      <canvas canvas-id="MomentShareImageCanvas" style="width: 580rpx;height: 580rpx;position: absolute;left: -999999px;top: -999999px;" />
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import util from '../utils/util'
+    import wxNet from '../utils/wxNet'
+    import {apiFetchGetShowPostRedux, apiFetchUnZanRedux, apiFetchZanRedux, apiFetchDetelePostRedux} from '../redux/post/actions'
+    import {apiFetchFanRedux, apiFetchUnFanRedux} from '../redux/user/actions'
+    import {apiFetchCreateQrcodebRedux} from '../redux/webApp/actions'
+    import store from '../store'
+    import {connect, setStore} from 'wepy-redux'
+
+    setStore(store)
+    @connect({
+      showPost: (state) => state.post.showPost
+    })
+
+    export default class Post extends wepy.page {
+      config = {
+        navigationBarTitleText: '文章',
+        navigationBarBackgroundColor: '#ffffff',
+        navigationBarTextStyle: 'black',
+        enablePullDownRefresh: true
+      }
+
+      data = {
+        id: '', // 文章序号
+        showPost: '',
+        showShareActionSheet: false,
+        fadeOutWarpper: false,
+        isLoading: true // 是否在loading数据
+      }
+
+      async onLoad(e) {
+        const that = this
+        that.id = e.id
+        await that.getShowPost()
+        util.wxGetInfo.showShareMenuPromise()
+        // 关闭loading动画
+        that.isLoading = false
+        that.$apply()
+      }
+
+      onShow(e) {
+        wx.showShareMenu({
+          withShareTicket: true
+        })
+      }
+
+
+      // 下拉 刷新
+      async onPullDownRefresh() {
+        const that = this
+        that.isLoading = true
+        await that.getShowPost()
+        // 关闭loading动画
+        that.isLoading = false
+        that.$apply()
+        wepy.stopPullDownRefresh()
+      }
+
+      onShareAppMessage () {
+        return {
+          title: '你好呀',
+          path: '/page/show?scene=1',
+          success: function(res) {
+            console.log(res)
+          },
+          fail: function(res) {
+            console.log(res)
+          }
+        }
+      }
+
+      // 拉取文章
+      async getShowPost () {
+        const that = this
+        const res = await store.dispatch(apiFetchGetShowPostRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.id,
+          showType: 'show'
+        }))
+
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          const state = store.getState()
+          that.showPost = state.post.showPost
+        }
+        that.$apply()
+      }
+
+      // 动作
+      methods = {
+        // 关注 / 取消关注
+        async clickFan () {
+          const that = this
+          if (that.showPost.isFan) {
+            that.unFan()
+          } else {
+            that.fan()
+          }
+        },
+        // 点赞 / 取消点赞
+        async clickZan () {
+          const that = this
+          if (that.showPost.isZan) {
+            that.unZan()
+          } else {
+            that.zan()
+          }
+        },
+        // 编辑
+        async clickEdit () {
+          const that = this
+          await util.wxGoTo.navigateTo(`./publish?type=post&id=${that.id}`)
+        },
+        // 删除
+        async clickDelete () {
+          const that = this
+          const showModal = await util.wxToast.showModal('提醒', '进行删除', true)
+          if (showModal) {
+            const deletePost = await that.deletePost()
+            await util.common.sleepPromise(1)
+            if (deletePost) {
+              await util.wxGoTo.switchTab(`./index`)
+            }
+          }
+        },
+        // 回复
+        async clickReply () {
+          const that = this
+          await util.wxGoTo.navigateTo(`./publish?type=reply&postId=${that.id}`)
+        },
+        // 评论
+        async clickReplies () {
+          const that = this
+          await util.wxGoTo.navigateTo(`./reply?id=${that.id}`)
+        },
+        // 分享
+        async clickShare () {
+          const that = this
+//          const selectResult = await util.wxToast.showActionSheet(['生成二维码', '转发朋友圈'])
+//          if (selectResult === 0) {
+//            // 生成二维码+头像
+//            const qrcodeWithAvatar = await that.createQrcodeWithAvatar(that.id)
+//            util.wxGetInfo.previewImagePromise(qrcodeWithAvatar)
+//          } else if (selectResult === 1) {
+//            // 转发朋友圈
+//            const qrcodeWithAvatar = await that.createQrcodeWithAvatar(that.id)
+//            const momentShareImage = await that.createMomentShareImage(qrcodeWithAvatar)
+//            util.wxGetInfo.previewImagePromise(momentShareImage)
+//          } else {
+//            // 点击取消
+//          }
+          that.showShareActionSheet = true
+          that.fadeOutWarpper = true
+        },
+
+        async hideShareActionSheet() {
+          const that = this
+          that.showShareActionSheet = false
+          that.fadeOutWarpper = false
+        }
+      }
+
+      // 关注
+      async fan () {
+        const that = this
+        const res = await store.dispatch(apiFetchFanRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.showPost.user.id
+        }))
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          util.wxToast.success(1000, res.data.message)
+          that.showPost.isFan = true
+          that.$apply()
+        }
+      }
+
+      // 取消关注
+      async unFan () {
+        const that = this
+        const res = await store.dispatch(apiFetchUnFanRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.showPost.user.id
+        }))
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          util.wxToast.success(1000, res.data.message)
+          that.showPost.isFan = false
+          that.$apply()
+        }
+      }
+
+      // 点赞
+      async zan () {
+        const that = this
+        const res = await store.dispatch(apiFetchZanRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.id
+        }))
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          util.wxToast.success(1000, res.data.message.result)
+          that.$apply()
+        }
+      }
+
+      // 取消点赞
+      async unZan () {
+        const that = this
+        const res = await store.dispatch(apiFetchUnZanRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.id
+        }))
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          util.wxToast.success(1000, res.data.message.result)
+          that.$apply()
+        }
+      }
+
+      // 删除
+      async deletePost () {
+        const that = this
+        const res = await store.dispatch(apiFetchDetelePostRedux({
+          token: wepy.getStorageSync('token'),
+          id: that.id
+        }))
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          await util.wxToast.success(1000, res.data.message.result)
+          return 1
+        }
+      }
+
+      // 生成二维码 scene page
+      async createQrcodeDownloadAvatar (scene) {
+        // 请求网络生成二维码，并且下载本地
+        const that = this
+        const res = await store.dispatch(apiFetchCreateQrcodebRedux({
+          token: wepy.getStorageSync('token'),
+          scene: that.id,
+          page: 'pages/postShare/postShare',
+          width: 430
+        }))
+
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          // 将二维码下载本地
+          const qrcodeTempFile = await wxNet.downloadFilePromise(res.data.message.url)
+          // 将头像下载本地
+          const avatarTempFile = await wxNet.downloadFilePromise(that.showPost.user.avatar)
+
+          return [qrcodeTempFile.tempFilePath, avatarTempFile.tempFilePath]
+        }
+      }
+
+      // 合成二维码和头像 avatar qrcode
+      // return tempFilePath
+      async createQrcodeWithAvatar (scene) {
+        const that = this
+
+        const tempFile = await that.createQrcodeDownloadAvatar(scene)
+
+        if (tempFile[0] && tempFile[1]) {
+          const ctx = wepy.createCanvasContext('QrcodeWithAvatarCanvas')
+          // 二维码
+          ctx.drawImage(tempFile[0], 0, 0, 430, 430)
+          // 头像
+          ctx.drawImage(tempFile[1], 148, 148, 135, 135)
+
+          // 将头像变成圆形,画白线
+          ctx.arc(215, 215, 80, 0, 2 * Math.PI)
+          ctx.setLineWidth(30)
+          ctx.setStrokeStyle('white')
+          ctx.stroke()
+          ctx.draw()
+
+          // 画圆
+          ctx.arc(215, 215, 67, 0, 2 * Math.PI)
+          ctx.setLineWidth(7)
+          ctx.setStrokeStyle('black')
+          ctx.stroke()
+          ctx.draw(true)
+
+          const qrcodeWithAvatar = await util.wxGetInfo.canvasToTempFilePathPromise('QrcodeWithAvatarCanvas')
+          return qrcodeWithAvatar.tempFilePath
+        }
+      }
+
+      // 合成分享朋友圈的图片 qrcode background
+      // return tempFilePath
+      async createMomentShareImage (qrcodeWithAvatar) {
+        // 下载背景图片
+        // 绘图
+        const ctx = wepy.createCanvasContext('MomentShareImageCanvas')
+        // 输出
+        const momentShareImage = await util.wxGetInfo.canvasToTempFilePathPromise('MomentShareImageCanvas')
+        return momentShareImage.tempFilePath
+      }
+    }
+</script>

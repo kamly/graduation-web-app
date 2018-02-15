@@ -1,0 +1,179 @@
+/**
+* Created by lijiaming on 2018/1/1.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  .index-container {
+    /*单个*/
+    .item {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background-color: #ffffff;
+      border-bottom: 1px solid #eeeeee;
+      padding: 10rpx;
+      .header {
+        width: 60rpx;
+        height: 60rpx;
+        border-radius: 50%;
+      }
+      .text {
+        .title, .article {
+          width: 620rpx;
+          word-break: keep-all;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .title {
+          margin-top: 15rpx;
+          font-size: 28rpx;
+          font-weight: 600;
+        }
+        .article {
+          margin-top: 10rpx;
+          font-size: 28rpx;
+          color: #656565;
+        }
+      }
+    }
+    /*动效*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+      <blcok wx:for="{{browse}}" wx:key="unique" wx:key="unique" wx:for-index="id" wx:for-item="item" >
+        <view class="item" bindtap="clickPost" data-id="{{item.post_id}}">
+          <image class="header" src="{{item.post_info.user.avatar}}"/>
+          <view class="text">
+            <view class="title">{{item.post_info.title}}</view>
+            <view class="article">{{item.post_info.des}}</view>
+          </view>
+        </view>
+      </blcok>
+    </block>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchBrowseRedux} from '../redux/user/actions'
+  import store from '../store'
+
+  export default class Browse extends wepy.page {
+    config = {
+      navigationBarTitleText: '浏览记录',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+    data = {
+      isLoading: true, // 加载
+      browse: []
+    }
+    // 加载
+    async onLoad() {
+      const that = this
+      await that.getBrowse()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+    }
+
+    // 下拉 刷新
+    async onPullDownRefresh() {
+      const that = this
+      that.isLoading = true
+      await that.getBrowse()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+      wepy.stopPullDownRefresh()
+    }
+
+    // 拉取浏览记录
+    async getBrowse () {
+      const that = this
+      const res = await store.dispatch(apiFetchBrowseRedux({
+        token: wepy.getStorageSync('token'),
+        num: 50
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.browse = state.user.userBrowse
+      }
+      that.$apply()
+    }
+
+    methods = {
+      // 跳转文章 post
+      async clickPost (e) {
+        let id = e.currentTarget.dataset.id
+        util.wxGoTo.navigateTo(`./post?id=${id}`)
+      }
+    }
+  }
+</script>

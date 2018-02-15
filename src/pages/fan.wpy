@@ -1,0 +1,225 @@
+/**
+* Created by lijiaming on 2018/1/1.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  page {
+    background-color: #ffffff;
+    color: #0e0e0e;
+  }
+  .index-container {
+    /*单个*/
+    .item{
+      padding: 10rpx 20rpx;
+      border-bottom: 5rpx solid #ebebeb;
+      .auth {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .left {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .image {
+            width: 70rpx;
+            height: 70rpx;
+            border-radius: 50%;
+          }
+          .name-des {
+            margin-left: 20rpx;
+            .name {
+              font-size: 30rpx;
+              font-weight: 500;
+              color: #2f2f2f;
+            }
+            .des {
+              font-size: 30rpx;
+              color: #4c4c4c;
+              max-width: 420rpx;
+              word-break: keep-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+        .right {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 10rpx 20rpx;
+          border-radius: 10rpx;
+          background-color: #ebebeb;
+          .fan {
+            font-size: 26rpx;
+            color: #979797;
+          }
+          .unfan {
+            font-size: 26rpx;
+            color: #3280f7;
+          }
+        }
+      }
+      .content {
+        white-space:pre-line;
+        word-wrap: break-word;
+      }
+    }
+    /*动效*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+      <blcok wx:for="{{fans}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+        <view class="item" bindtap="clickUser" data-id="{{item.user_info.id}}">
+          <view class="auth">
+            <view class="left">
+              <image class="image" src="{{item.user_info.avatar}}"/>
+              <view class="name-des">
+                <view class="name">{{item.user_info.name}}</view>
+                <view class="des">{{item.user_info.des}}</view>
+              </view>
+            </view>
+            <view class="right">
+              <block wx:if="{{item.hasStar}}">
+                  <view class="fan">已关注</view>
+              </block>
+              <block wx:else>
+                  <view class="unfan">未关注</view>
+              </block>
+            </view>
+          </view>
+          <block wx:if="{{item.user_post}}">
+            <!--最新的一篇标题-->
+            <view class="content">
+              <view>最新文章:</view>
+              <text>{{item.user_post.title}}</text>
+            </view>
+          </block>
+        </view>
+      </blcok>
+    </block>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetFansRedux} from '../redux/user/actions'
+  import store from '../store'
+
+  export default class Star extends wepy.page {
+    config = {
+      navigationBarTitleText: '粉丝',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+    data = {
+      isLoading: true, // 加载
+      fans: []
+    }
+
+    // 加载
+    async onLoad() {
+      const that = this
+      await that.getFans()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+    }
+
+    // 下拉 刷新
+    async onPullDownRefresh() {
+      const that = this
+      that.isLoading = true
+      await that.getFans()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+      wepy.stopPullDownRefresh()
+    }
+
+    // 拉取专题
+    async getFans() {
+      const that = this
+      const res = await store.dispatch(apiFetchGetFansRedux({
+        token: wepy.getStorageSync('token')
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.fans = state.user.userFans
+      }
+      that.$apply()
+    }
+    methods = {
+      // 点击用户
+      async clickUser (e) {
+        let id = e.currentTarget.dataset.id
+        await util.wxGoTo.navigateTo(`./show?id=${id}`)
+      }
+    }
+  }
+</script>

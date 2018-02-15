@@ -1,0 +1,298 @@
+/**
+* Created by lijiaming on 2017/12/26.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  .index-container {
+    .my-container {
+      display: flex;
+      align-items: center;
+      margin-top: 30rpx;
+      padding: 20rpx;
+      background-color: #ffffff;
+      .image-user {
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+        margin-right: 20rpx;
+      }
+      .name-des {
+        font-size: 32rpx;
+        width: 85%;
+        .des {
+          font-size: 24rpx;
+          color: #c5c5c5;
+        }
+      }
+      .image-arrow {
+        width: 30rpx;
+        height: 30rpx;
+      }
+    }
+    .fans-container {
+      margin-top: 30rpx;
+      padding: 20rpx;
+      background-color: #ffffff;
+      .item {
+        display: flex;
+        align-items: center;
+        .image-top {
+          width: 60rpx;
+          height: 60rpx;
+          margin-right: 20rpx;
+        }
+        .name-des {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          border-bottom: 1rpx solid #efefef;
+          padding: 20rpx 0rpx;
+          .name {
+            font-size: 32rpx;
+            width: 100%;
+          }
+          .image-arrow {
+            width: 30rpx;
+            height: 30rpx;
+          }
+        }
+      }
+    }
+    .setting-container {
+      margin-top: 30rpx;
+      padding: 20rpx;
+      background-color: #ffffff;
+      .item {
+        display: flex;
+        align-items: center;
+        .image-top {
+          width: 60rpx;
+          height: 60rpx;
+          margin-right: 20rpx;
+        }
+        .name-des {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          border-bottom: 1rpx solid #efefef;
+          padding: 20rpx 0rpx;
+          .name {
+            font-size: 32rpx;
+            width: 100%;
+          }
+          .image-arrow {
+            width: 30rpx;
+            height: 30rpx;
+          }
+        }
+      }
+    }
+    /*动效*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+    <view class="my-container" bindtap="clickUserInfo">
+      <image class="image-user" src="{{userInfo.avatar}}"/>
+      <view class="name-des">
+        <view class="name">{{userInfo.name}}</view>
+        <block wx:if="{{userInfo.des}}">
+          <view class="des">{{userInfo.des}}</view>
+        </block>
+        <block wx:else>
+          <view class="des">暂无</view>
+        </block>
+      </view>
+      <image class="image-arrow" src="../assets/images/arrow.svg"/>
+    </view>
+
+    <view class="fans-container">
+      <view class="item" bindtap="clickStars">
+        <image class="image-top" src="../assets/images/focus.svg"/>
+        <view class="name-des">
+          <view class="name">关注</view>
+          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+        </view>
+      </view>
+      <view class="item" bindtap="clickFans">
+        <image class="image-top" src="../assets/images/fans.svg"/>
+        <view class="name-des">
+          <view class="name">粉丝</view>
+          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+        </view>
+      </view>
+    </view>
+
+    <view class="setting-container">
+      <view class="item" bindtap="clickBrowses">
+        <image class="image-top" src="../assets/images/browse.svg"/>
+        <view class="name-des">
+          <view class="name">最近浏览</view>
+          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+        </view>
+      </view>
+      <view class="item">
+        <image class="image-top" src="../assets/images/light.svg"/>
+        <view class="name-des">
+          <view class="name">夜间模式</view>
+          <switch checked/>
+        </view>
+      </view>
+      <view class="item">
+        <image class="image-top" src="../assets/images/fans.svg"/>
+        <view class="name-des">
+          <view class="name">解绑</view>
+          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+        </view>
+      </view>
+      <view class="item">
+        <image class="image-top" src="../assets/images/feedback.svg"/>
+        <view class="name-des">
+          <view class="name">用户反馈</view>
+          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+        </view>
+      </view>
+    </view>
+    </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetUserInfoRedux} from '../redux/user/actions'
+  import store from '../store'
+  import {connect, setStore} from 'wepy-redux'
+
+  setStore(store)
+  @connect({
+    myInfo: (state) => state.user.myInfo
+  })
+
+  export default class More extends wepy.page {
+    config = {
+      navigationBarTitleText: '更多',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+    data = {
+      isLoading: true, // loading
+      id: '',
+      userInfo: ''
+    }
+
+    async onLoad() {
+      const that = this
+      await that.getUserInfo()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+    }
+    // 下拉 刷新
+    async onPullDownRefresh() {
+      const that = this
+      that.isLoading = true
+      await that.getUserInfo()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+      wepy.stopPullDownRefresh()
+    }
+    methods = {
+      // 关注
+      async clickStars () {
+        util.wxGoTo.navigateTo(`./star`)
+      },
+      // 粉丝
+      async clickFans () {
+        util.wxGoTo.navigateTo(`./fan`)
+      },
+      // 点击个人信息
+      async clickUserInfo () {
+        const that = this
+        await util.wxGoTo.navigateTo(`./show?id=${that.id}`)
+      },
+      async clickBrowses () {
+        await util.wxGoTo.navigateTo(`./browse`)
+      }
+    }
+
+    // 拉取用户信息
+    async getUserInfo () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetUserInfoRedux({
+        token: wepy.getStorageSync('token'),
+        id: 0,
+        showType: 'my'
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.userInfo = state.user.myInfo
+        that.id = state.user.myInfo.id
+      }
+      that.$apply()
+    }
+  }
+</script>

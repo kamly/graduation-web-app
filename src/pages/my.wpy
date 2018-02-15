@@ -1,0 +1,384 @@
+/**
+* Created by lijiaming on 2017/12/26.
+*/
+
+<style lang="less" rel="stylesheet/less">
+
+  .index-container {
+    /*选择框*/
+    .side-container {
+      height: 100%;
+      position: fixed;
+      background-color: #ffffff;
+      .side {
+        .item {
+          padding: 50rpx;
+          color: #ebebeb;
+        }
+        .active {
+          color: #3280f7;
+          border-bottom: 1rpx solid #3280f7;
+        }
+      }
+    }
+    /*发帖回帖框*/
+    .post-reply-container {
+      height: 100%;
+      overflow: auto;
+      position: fixed;
+      background-color: #ebebeb;
+      transition: All 0.4s ease;
+      z-index: 0;
+      .icon {
+        position: fixed;
+        top: 10rpx;
+        left: 10rpx;
+        transition: transform 0.4s ease-out;
+        image {
+          width: 40rpx;
+          height: 40rpx;
+        }
+      }
+      .post-container, .reply-container {
+        padding: 20rpx;
+        .container {
+          .item {
+            margin-top: 10rpx;
+            padding: 20rpx;
+            background-color: #ffffff;
+            font-size: 26rpx;
+            .top {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              .auth {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .image {
+                  width: 40rpx;
+                  height: 40rpx;
+                  border-radius: 50%;
+                }
+                .name-time {
+                  margin-left: 20rpx;
+                  color: #a7a7a7;
+                  font-weight: 200;
+                }
+              }
+              .more {
+                width: 30rpx;
+                height: 30rpx;
+              }
+            }
+            .title, .article {
+              word-break: keep-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .title {
+              margin-top: 15rpx;
+              font-size: 36rpx;
+              font-weight: 600;
+            }
+            .article {
+              margin-top: 10rpx;
+              color: #656565;
+            }
+          }
+        }
+      }
+    }
+    /*发帖回帖框动效*/
+    .containerAnimate {
+      transform: rotate(0deg) scale(1) translate(25%,0%);
+      -webkit-transform: rotate(0deg) scale(1) translate(25%,0%);
+    }
+    /*打开动效*/
+    .openIconAnimate {
+      transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+    }
+    /*关闭动效*/
+    .closeIconAnimate {
+      transform: rotate(-360deg);
+      -webkit-transform: rotate(-360deg);
+    }
+    /*loading*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+    <!--选择边框-->
+      <view class="side-container">
+        <view class="side">
+          <view class="item {{activeSide == 0 ? 'active': ''}}" data-index="0" bindtap="clickSide">
+            文章
+          </view>
+          <view class="item {{activeSide == 1 ? 'active': ''}}" data-index="1" bindtap="clickSide">
+            评论
+          </view>
+          <view class="item {{activeSide == 2 ? 'active': ''}}" data-index="2" bindtap="clickSide">
+            通知
+          </view>
+        </view>
+      </view>
+    <!--选择边框-->
+
+    <!--发帖回帖通知框-->
+      <view class="post-reply-container {{openSide ? 'containerAnimate' : ''}}" style="width: {{windowWidth}}px">
+
+        <!--图标-->
+        <view class="icon {{openSide ? 'openIconAnimate' : ''}} {{!openSide ? 'closeIconAnimate' : ''}}">
+          <image bindtap="clickIcon" src="../assets/images/close.png"></image>
+        </view>
+
+        <!--发帖-->
+        <block wx:if="{{activeSide == 0 ? true : false}}">
+          <view class="post-container">
+            <view class="container">
+              <blcok wx:for="{{posts}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+                <view class="item" bindtap="clickPost" data-id="{{item.id}}">
+                  <view class="top">
+                    <view class="auth">
+                      <view class="name-time">{{item.time}}</view>
+                    </view>
+                    <image class="more" src="../assets/images/more.svg"/>
+                  </view>
+                  <view class="title">{{item.title}}</view>
+                  <view class="article">{{item.des}}</view>
+                </view>
+              </blcok>
+            </view>
+          </view>
+        </block>
+
+        <!--回帖-->
+        <block wx:if="{{activeSide == 1 ? true : false}}">
+          <view class="reply-container">
+            <view class="container">
+              <blcok wx:for="{{comments}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+                <view class="item" bindtap="clickPost" data-id="{{item.post.id}}">
+                  <view class="top">
+                    <view class="auth">
+                      <image class="image" src="{{item.post_user.avatar}}"/>
+                      <view class="name-time">{{item.post.time}}</view>
+                    </view>
+                    <image class="more" src="../assets/images/more.svg"/>
+                  </view>
+                  <view class="title">标题：{{item.post.title}}</view>
+                  <view class="article">评论：{{item.content}}</view>
+                </view>
+              </blcok>
+            </view>
+          </view>
+        </block>
+
+        <!--通知-->
+        <block wx:if="{{activeSide == 2 ? true : false}}">
+          <view class="reply-container">
+            <view class="container">
+              <blcok wx:for="{{notices}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+                <view class="item">
+                  <view class="top">
+                    <view class="auth">
+                      <view class="name-time">{{item.time}}</view>
+                    </view>
+                    <image class="more" src="../assets/images/more.svg"/>
+                  </view>
+                  <view class="title">{{item.info.title}}</view>
+                  <view class="article">{{item.info.content}}</view>
+                </view>
+              </blcok>
+            </view>
+          </view>
+        </block>
+
+      </view>
+    </block>
+    <!--发帖回帖通知框-->
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetPostsRedux, apiFetchGetCommentsRedux, apiFetchGetNoticesRedux} from '../redux/user/actions'
+  import store from '../store'
+  import {connect, setStore} from 'wepy-redux'
+
+  setStore(store)
+  @connect({
+    userPosts: (state) => state.user.userPosts,
+    userComments: (state) => state.user.userComments
+  })
+
+  export default class My extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+    data = {
+      openSide: false, // 打开边
+      activeSide: 0, // 激活
+      windowWidth: 0, // 宽度
+      isLoading: true, // loading
+      posts: [],
+      comments: [],
+      notices: []
+    }
+    async onLoad() {
+      const that = this
+      const systemInfo = await util.wxGetInfo.getSystemInfoPromise()
+      that.windowWidth = systemInfo.windowWidth // 屏幕宽度
+      await that.getPosts()
+      await that.getComments()
+      await that.getNotices()
+      that.isLoading = false
+      that.$apply()
+    }
+
+    // 拉取文章
+    async getPosts () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetPostsRedux({
+        token: wepy.getStorageSync('token')
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.posts = state.user.userPosts
+      }
+      that.$apply()
+    }
+
+    // 拉取评论
+    async getComments () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetCommentsRedux({
+        token: wepy.getStorageSync('token')
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.comments = state.user.userComments
+      }
+      that.$apply()
+    }
+
+    // 拉取通知
+    async getNotices () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetNoticesRedux({
+        token: wepy.getStorageSync('token')
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.notices = state.user.userNotices
+      }
+      that.$apply()
+    }
+
+    // 下拉 刷新
+    async onPullDownRefresh() {
+      const that = this
+      that.isLoading = true
+      await that.getPosts()
+      await that.getComments()
+      await that.getNotices()
+      that.isLoading = false
+      that.$apply()
+      wepy.stopPullDownRefresh()
+    }
+
+    methods = {
+      // 点击边框
+      clickSide: function(e) {
+        const that = this
+        that.activeSide = e.currentTarget.dataset.index
+        that.$apply()
+      },
+      // 点击图标
+      clickIcon: function(e) {
+        const that = this
+        that.openSide = !that.openSide
+        that.$apply()
+      },
+      // 跳转文章 post
+      async clickPost (e) {
+        let id = e.currentTarget.dataset.id
+        util.wxGoTo.navigateTo(`./post?id=${id}`)
+      }
+    }
+  }
+</script>

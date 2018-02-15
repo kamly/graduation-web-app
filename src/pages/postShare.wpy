@@ -1,0 +1,232 @@
+/**
+* Created by lijiaming on 2018/1/17.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  page {
+    background-color: #ffffff;
+    color: #0e0e0e;
+  }
+  .index-container {
+    width: 100%;
+    /*标题*/
+    .title-container {
+      position: fixed;
+      top: 0;
+      z-index: 10;
+      width: 95%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20rpx;
+      border-top: 1rpx solid #ebebeb;
+      border-bottom: 10rpx solid #ebebeb;
+      font-size: 38rpx;
+      font-weight: 600;
+      color: #1d1d1d;
+      background-color: #ffffff;
+      .text {
+        max-width: 400rpx;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    /*作者*/
+    .auth-container {
+      margin-top: 110rpx;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10rpx 20rpx;
+      border-bottom: 5rpx solid #ebebeb;
+      .left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .image {
+          width: 70rpx;
+          height: 70rpx;
+          border-radius: 50%;
+        }
+        .name-des {
+          margin-left: 20rpx;
+          .name {
+            font-size: 30rpx;
+            font-weight: 500;
+            color: #2f2f2f;
+            max-width: 440rpx;
+            word-break: keep-all;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .des {
+            font-size: 30rpx;
+            color: #4c4c4c;
+            max-width: 440rpx;
+            word-break: keep-all;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+    /*内容*/
+    .post-container {
+      margin-top: 5rpx;
+      padding: 10rpx 20rpx 100rpx 20rpx;
+      .text {
+        white-space:pre-line;
+        word-wrap: break-word;
+      }
+      .images {
+        display: flex;
+        image {
+          width: 130rpx;
+          height: 130rpx;
+          margin-right: 12rpx;
+        }
+      }
+    }
+    /*loading*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+      <view class="title-container">
+        <view class="text">{{showPostShare.title}}</view>
+      </view>
+
+      <view class="auth-container">
+        <view class="left">
+          <image class="image" src="../assets/images/test.jpg"/>
+          <view class="name-des">
+            <view class="name">{{showPostShare.user.name}}</view>
+            <block wx:if="1">
+              <view class="des">{{showPostShare.user.des}}</view>
+            </block>
+            <block wx:else>
+              <view class="des">暂无</view>
+            </block>
+          </view>
+        </view>
+      </view>
+
+      <view class="post-container">
+        <rich-text class="text" nodes="{{showPostShare.html}}"></rich-text>
+        <view class="images">
+          <block wx:for="{{showPostShare.images}}" wx:key="unique" wx:for-index="id" wx:for-item="item" class="images">
+            <image src="{{item}}"/>
+          </block>
+        </view>
+      </view>
+
+    </block>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetShowPostShareRedux} from '../redux/post/actions'
+  import store from '../store'
+
+  export default class PostShare extends wepy.page {
+    config = {
+      navigationBarTitleText: '文章分享',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+    data = {
+      scene: '', // 就是帖子的序号
+      showPostShare: '', // 帖子内容
+      isLoading: true // 是否在loading数据
+    }
+
+    async onLoad(e) {
+      const that = this
+      that.scene = decodeURIComponent(e.scene)
+      await that.getShowPostShare()
+      that.isLoading = false
+      that.$apply()
+    }
+
+    async getShowPostShare() {
+      const that = this
+      const res = await store.dispatch(apiFetchGetShowPostShareRedux({
+        id: that.scene
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.showPostShare = state.post.showPostShare
+      }
+      that.$apply()
+    }
+  }
+</script>

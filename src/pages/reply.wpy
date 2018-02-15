@@ -1,0 +1,273 @@
+/**
+* Created by lijiaming on 2017/12/26.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  page {
+    background-color: #ffffff;
+    color: #0e0e0e;
+  }
+  .index-container {
+    /*顶部*/
+    .top-container {
+      padding: 10rpx 40rpx 10rpx 40rpx;
+      font-size: 28rpx;
+      background-color: #f6f6f6;
+      color: #bdbdbd;
+    }
+    /*内容*/
+    .content-container {
+      .item {
+        display: flex;
+        padding: 20rpx;
+        border-bottom: 1rpx solid #dcdcdc;
+        .left {
+          margin-right: 30rpx;
+          .image {
+            width: 80rpx;
+            height: 80rpx;
+            border-radius: 50%;
+          }
+        }
+        .right {
+          width: 600rpx;
+          .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .name-time {
+              display: flex;
+              align-items: center;
+              .name {
+                margin-right: 20rpx;
+                font-weight: 600;
+              }
+              .time {
+                margin-left: 20rpx;
+                font-size: 28rpx;
+                color: #cfcfcf;
+              }
+            }
+            .update-delete {
+              display: flex;
+              align-items: center;
+              font-size: 28rpx;
+              color: #cfcfcf;
+            }
+          }
+          .content {
+            /*有长度限制才生效*/
+            white-space: pre-line;
+            word-wrap: break-word;
+          }
+          .images {
+            display: flex;
+            image {
+              width: 130rpx;
+              height: 130rpx;
+              margin-right: 12rpx;
+            }
+          }
+        }
+      }
+    }
+    /*loading*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+      <view class="top-container">评论（{{postComments.length}}）</view>
+      <view class="content-container">
+        <block wx:for="{{postComments}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+          <view class="item">
+            <view class="left">
+              <image class="image" src="../assets/images/test.jpg"/>
+            </view>
+            <view class="right">
+              <view class="top">
+                <view class="name-time">
+                  <view class="name">{{item.user.name}}</view>
+                  <view class="time">{{item.time}}</view>
+                </view>
+                <block wx:if="{{item.isCommenter}}">
+                  <view class="update-delete">
+                    <view class="" bindtap="clickEdit" data-id="{{item.id}}">修改</view>
+                    <view class="">|</view>
+                    <view class="" bindtap="clickDelete" data-id="{{item.id}}">删除</view>
+                  </view>
+                </block>
+              </view>
+              <rich-text class="content" nodes="{{item.content}}"></rich-text>
+              <view class="images">
+                <block wx:for="{{item.images}}" wx:key="unique" wx:for-index="idImage" wx:for-item="itemImage" class="images">
+                  <image src="{{itemImage}}"/>
+                </block>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </block>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetPostCommentsRedux, apiFetchDeteleCommentRedux} from '../redux/comment/actions'
+  import store from '../store'
+  import {connect, setStore} from 'wepy-redux'
+
+  setStore(store)
+  @connect({
+    postComments: (state) => state.comment.postComments
+  })
+
+  export default class Reply extends wepy.page {
+    config = {
+      navigationBarTitleText: '评论',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+
+    data = {
+      id: '', // 文章序号
+      postComments: [],
+      isLoading: true // 是否在loading数据
+    }
+
+    async onLoad(e) {
+      const that = this
+      that.id = e.id
+      await that.getShowComments()
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+    }
+
+    // 下拉 刷新
+    async onPullDownRefresh() {
+      const that = this
+      that.isLoading = true
+      await that.getShowComments()
+      that.isLoading = false
+      that.$apply()
+      wepy.stopPullDownRefresh()
+    }
+
+    // 拉取文章的评论
+    async getShowComments () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetPostCommentsRedux({
+        token: wepy.getStorageSync('token'),
+        postId: that.id
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.postComments = state.comment.postComments
+      }
+      that.$apply()
+    }
+
+    // 动作
+    methods = {
+      // 更新
+      async clickEdit(e) {
+        const that = this
+        const id = e.currentTarget.dataset.id
+        const showModal = await util.wxToast.showModal('提醒', '进入修改页面', true)
+        if (showModal) {
+          await util.wxGoTo.navigateTo(`./publish?type=reply&id=${id}&postId=${that.id}`)
+        }
+      },
+      // 删除
+      async clickDelete(e) {
+        const that = this
+        const showModal = await util.wxToast.showModal('提醒', '进行删除', true)
+        if (showModal) {
+          const id = e.currentTarget.dataset.id
+          that.deleteComment(id)
+        }
+      }
+    }
+
+    // 删除
+    async deleteComment (id) {
+      const that = this
+      const res = await store.dispatch(apiFetchDeteleCommentRedux({
+        token: wepy.getStorageSync('token'),
+        id: id,
+        postId: that.id
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        util.wxToast.success(1000, res.data.message.result)
+      }
+      that.$apply()
+    }
+  }
+</script>

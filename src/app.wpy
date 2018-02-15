@@ -1,0 +1,78 @@
+<style lang="less">
+  page {
+    background-color: #ebebeb;
+    color: #0e0e0e;
+  }
+  .function-rpx (@size) {
+    return: @size * 1rpx
+  }
+</style>
+
+<script>
+
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/index',
+        'pages/post',
+        'pages/postShare',
+        'pages/reply',
+        'pages/publish',
+        'pages/more',
+        'pages/my',
+        'pages/topic',
+        'pages/star',
+        'pages/fan',
+        'pages/setting',
+        'pages/show',
+        'pages/browse',
+        'pages/register',
+        'pages/search'
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#fff',
+        navigationBarTitleText: '首页',
+        navigationBarTextStyle: 'black'
+      },
+      tabBar: {
+        'color': '#9DACB7',
+        'selectedColor': '#1296db',
+        'background': '#f2f1f1',
+        'borderStyle': 'white',
+        'position': 'bottom',
+        'list': [
+          {
+            'pagePath': 'pages/my',
+            'text': '我的',
+            'iconPath': './assets/icons/my_1.png',
+            'selectedIconPath': './assets/icons/my_2.png'
+          },
+          {
+            'pagePath': 'pages/index',
+            'text': '首页',
+            'iconPath': './assets/icons/head_1.png',
+            'selectedIconPath': './assets/icons/head_2.png'
+          },
+          {
+            'pagePath': 'pages/more',
+            'text': '更多',
+            'iconPath': './assets/icons/more_1.png',
+            'selectedIconPath': './assets/icons/more_2.png'
+          }
+        ]
+      }
+    }
+
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify')
+    }
+
+    globalData = {}
+  }
+</script>

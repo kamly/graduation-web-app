@@ -1,0 +1,910 @@
+<style lang="less">
+  .index-container {
+    .search-tab {
+      position: fixed;
+      top: 0;
+      z-index: 10;
+      /*搜索*/
+      .search-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 10rpx 0rpx;
+        background-color: #ffffff;
+        border-bottom: 1rpx solid #ebebeb;
+        /*搜索*/
+        .search {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 80%;
+          padding: 8rpx 0rpx;
+          background-color: #ebebeb;
+          border-radius: 10rpx;
+          .search-image {
+            width: 30rpx;
+            height: 30rpx;
+            margin-right: 20rpx;
+          }
+          .search-text {
+            font-size: 28rpx;
+            color: #969696;
+            max-width: 400rpx;
+            word-break: keep-all;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        /*发表*/
+        .post {
+          width: 15%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .post-image {
+            width: 30rpx;
+            height: 30rpx;
+            margin-right: 10rpx;
+          }
+          .post-text {
+            font-size: 28rpx;
+            color: #2984f3;
+          }
+        }
+      }
+
+      /*选择*/
+      .tab-container {
+        position: relative;
+        display: flex;
+        font-size: 30rpx;
+        background-color: #ffffff;
+        color: #666666;
+        .tab {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding-top: 16rpx;
+          padding-bottom: 20rpx;
+        }
+        /*激活*/
+        .tab-active {
+          color: #2d80ff;
+        }
+        /*底线*/
+        .under-line {
+          position: absolute;
+          bottom: 0;
+          height: 6rpx;
+          background-color: #2d80ff;
+        }
+        /*动效*/
+        .withAnimate {
+          transition: all 150ms ease;
+          -webkit-transform: translate3d(0, 0, 0);
+          -moz-transform: translate3d(0, 0, 0);
+          -ms-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+          -webkit-backface-visibility: hidden;
+          -moz-backface-visibility: hidden;
+          -ms-backface-visibility: hidden;
+          backface-visibility: hidden;
+          -webkit-perspective: 1000;
+          -moz-perspective: 1000;
+          -ms-perspective: 1000;
+          perspective: 1000;
+        }
+      }
+    }
+
+    /*动态*/
+    .dynamic-container {
+      margin-top: 158rpx;
+      .swiper {
+        .item {
+          .item-image {
+            width: 100%;
+            height: 400rpx;
+          }
+        }
+      }
+      .content {
+        .item {
+          margin-top: 10rpx;
+          padding: 20rpx;
+          background-color: #ffffff;
+          font-size: 26rpx;
+          .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .auth {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              .image {
+                width: 40rpx;
+                height: 40rpx;
+                border-radius: 50%;
+              }
+              .name-time {
+                margin-left: 20rpx;
+                color: #a7a7a7;
+                font-weight: 200;
+              }
+            }
+            .more {
+              width: 30rpx;
+              height: 30rpx;
+            }
+          }
+          .title {
+            margin-top: 15rpx;
+            font-size: 36rpx;
+            font-weight: 600;
+          }
+          .article {
+            margin-top: 10rpx;
+            color: #656565;
+          }
+          .buttom {
+            margin-top: 10rpx;
+            font-weight: 400;
+            color: #a7a7a7;
+          }
+        }
+      }
+    }
+
+    /*热门*/
+    .hot-container {
+      margin-top: 158rpx;
+      font-size: 32rpx;
+      .item {
+        padding: 15rpx;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: #ffffff;
+        border-bottom: 1px solid #eeeeee;
+        .num {
+          margin-right: 20rpx;
+          font-weight: 600;
+          color: #858585;
+        }
+        .first {
+          color: #ea385d;
+        }
+        .second {
+          color: #f29f3c;
+        }
+        .third {
+          color: #baa068;
+        }
+        .content {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 28rpx;
+          .text {
+            margin-right: 10rpx;
+            max-width: 680rpx;
+            .title {
+              margin-top: 15rpx;
+              font-size: 36rpx;
+              font-weight: 600;
+              word-break: keep-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .des {
+              margin-top: 10rpx;
+              font-weight: 400;
+              color: #a7a7a7;
+              word-break: keep-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .comment {
+              margin-top: 10rpx;
+              color: #656565;
+              word-break: keep-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+    }
+
+    /*专题*/
+    .topic-container {
+      margin-top: 158rpx;
+      .item {
+        margin-top: 20rpx;
+        background-color: #ffffff;
+        .top {
+          .image {
+            width: 100%;
+            height: 400rpx;
+          }
+          .title {
+            margin: -80rpx 30rpx 30rpx 30rpx;
+            color: #ffffff;
+            font-size: 36rpx;
+            max-width: 600rpx;
+            word-break: keep-all;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        .des {
+          padding: 10rpx 10rpx 20rpx 10rpx;
+          color: #aeaeae;
+          font-size: 24rpx;
+          border-bottom: 1rpx solid #e3e3e3;
+        }
+        .bottom {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10rpx;
+          .headers {
+            .image {
+              margin: 10rpx 15rpx 10rpx 0rpx;
+              width: 60rpx;
+              height: 60rpx;
+              border-radius: 50%;
+            }
+            .text {
+              font-size: 28rpx;
+              color: #626262;
+            }
+          }
+          .text {
+            font-size: 28rpx;
+            color: #626262;
+          }
+        }
+      }
+    }
+
+    /*loading动画效果*/
+    .loading-container-0 {
+        margin: 450rpx auto 0 auto;
+        width: 120rpx;
+        height: 120rpx;
+        text-align: center;
+      view {
+        margin: 5rpx;
+        height: 100%;
+        width: 12rpx;
+        display: inline-block;
+        background-color: #2d80ff;
+        -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+        animation: stretchdelay 1.2s infinite ease-in-out;
+      }
+
+      .rect2 {
+        -webkit-animation-delay: -1.1s;
+        animation-delay: -1.1s;
+      }
+
+      .rect3 {
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      .rect4 {
+        -webkit-animation-delay: -0.9s;
+        animation-delay: -0.9s;
+      }
+
+      .rect5 {
+        -webkit-animation-delay: -0.8s;
+        animation-delay: -0.8s;
+      }
+
+      @-webkit-keyframes stretchdelay {
+        0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+        20% { -webkit-transform: scaleY(1.0) }
+      }
+
+      @keyframes stretchdelay {
+        0%, 40%, 100% {
+          transform: scaleY(0.4);
+          -webkit-transform: scaleY(0.4);
+        }  20% {
+             transform: scaleY(1.0);
+             -webkit-transform: scaleY(1.0);
+           }
+      }
+
+    }
+    /*loading动画效果*/
+    .loading-container-1 {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      .cube1, .cube2 {
+        background-color: #2d80ff;
+        width: 60rpx;
+        height: 60rpx;
+        position: absolute;
+        top: 0;
+        left: 0;
+        -webkit-animation: cubemove 1.8s infinite ease-in-out;
+        animation: cubemove 1.8s infinite ease-in-out;
+      }
+
+      .cube2 {
+        -webkit-animation-delay: -0.9s;
+        animation-delay: -0.9s;
+      }
+
+      @-webkit-keyframes cubemove {
+        25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }
+        50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }
+        75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }
+        100% { -webkit-transform: rotate(-360deg) }
+      }
+
+      @keyframes cubemove {
+        25% {
+          transform: translateX(42px) rotate(-90deg) scale(0.5);
+          -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+        } 50% {
+            transform: translateX(42px) translateY(42px) rotate(-179deg);
+            -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+          } 50.1% {
+              transform: translateX(42px) translateY(42px) rotate(-180deg);
+              -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+            } 75% {
+                transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+                -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+              } 100% {
+                  transform: rotate(-360deg);
+                  -webkit-transform: rotate(-360deg);
+                }
+      }
+    }
+    /*loading动画效果*/
+    .loading-container-2 {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      background-color: #2d80ff;
+      -webkit-animation: rotateplane 1.2s infinite ease-in-out;
+      animation: rotateplane 1.2s infinite ease-in-out;
+      @-webkit-keyframes rotateplane {
+        0% { -webkit-transform: perspective(120px) }
+        50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+        100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+      }
+
+      @keyframes rotateplane {
+        0% {
+          transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+          -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+        } 50% {
+            transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+            -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+          } 100% {
+              transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+              -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+            }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <view class="search-tab">
+      <!--搜索-->
+      <view class="search-container">
+        <view class="search" bindtap="clickSearch">
+          <image class="search-image" src="../assets/images/search.svg"></image>
+
+          <view class="search-text">{{indexSearch}}</view>
+        </view>
+        <view class="post" bindtap="clickPublish">
+          <image class="post-image" src="../assets/images/post.svg"></image>
+          <view class="post-text">发表</view>
+        </view>
+      </view>
+      <!--搜索-->
+
+      <!--选择-->
+      <view class="tab-container">
+          <view wx:for="{{tabs}}" wx:key="unique" data-index=
+            "{{index}}" bindtap="updateSelectedPage" class="tab {{activeTab == index ? 'tab-active' : ''}}" style="width:{{windowWidth / tabs.length}}px">
+            <text>{{item}}</text>
+          </view>
+          <view style="width:{{lineWidth}}px; left:{{offset / tabs.length}}px" class="under-line withAnimate"></view>
+      </view>
+      <!--选择-->
+    </view>
+
+    <block wx:if="{{isLoading && loadingContainer === 0}}">
+      <view class="loading-container-0">
+        <view class="rect1"></view>
+        <view class="rect2"></view>
+        <view class="rect3"></view>
+        <view class="rect4"></view>
+        <view class="rect5"></view>
+      </view>
+    </block>
+
+    <block wx:if="{{isLoading && loadingContainer === 1}}">
+      <div class="loading-container-1">
+        <div class="cube1"></div>
+        <div class="cube2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{isLoading && loadingContainer === 2}}">
+      <div class="loading-container-2"></div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+      <!--内容 动态-->
+      <block wx:if="{{activeTab == 0 ? true : false}}">
+        <view class="dynamic-container">
+          <!--图片滚轮-->
+          <swiper class="swiper">
+            <blcok wx:for="{{indexImage}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+              <swiper-item class="item">
+                <image class="item-image" src="{{item.url}}" model="aspectFit"/>
+              </swiper-item>
+            </blcok>
+          </swiper>
+          <!--图片滚轮-->
+
+          <!--动态内容-->
+          <view class="content">
+            <blcok wx:for="{{indexPost}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+              <view class="item" bindtap="clickPost" data-id="{{item.id}}">
+                <view class="top">
+                  <view class="auth">
+                    <image class="image" src="{{item.user.avatar}}"/>
+                    <view class="name-time">{{item.user.name}} · {{item.time}}</view>
+                  </view>
+                  <image class="more" src="../assets/images/more.svg"/>
+                </view>
+                <view class="title">{{item.title}}</view>
+                <view class="article">{{item.des}}</view>
+                <view class="buttom">
+                  <view class="des">{{item.zans_count}} 赞 · {{item.comments_count}} 评论 · 去看看</view>
+                </view>
+              </view>
+            </blcok>
+          </view>
+          <!--动态内容-->
+
+          <blcok wx:if="{{indexPostEnd}}">
+            到底部啦啦
+          </blcok>
+
+        </view>
+      </block>
+      <!--内容 动态-->
+
+      <!--内容 热门-->
+      <block wx:if="{{activeTab == 1 ? true : false}}">
+        <view class="hot-container">
+          <blcok wx:for="{{indexComment}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+            <view class="item" bindtap="clickPost" data-id="{{item.post.id}}">
+              <view class="num {{id == 0 ? 'first' : ''}} {{id == 1 ? 'second' : ''}} {{id == 2 ? 'third' : ''}}">{{id+1}}</view>
+              <view class="content">
+                <view class="text">
+                  <view class="title">标题：{{item.post.title}}</view>
+                  <view class="des">评论者：{{item.user.name}} {{item.time}}</view>
+                  <view class="comment">评论：{{item.content}}</view>
+                </view>
+              </view>
+            </view>
+          </blcok>
+          <blcok wx:if="{{indexCommentEnd}}">
+            到底部啦啦
+          </blcok>
+        </view>
+      </block>
+      <!--内容 热门-->
+
+      <!--内容 专题-->
+      <block wx:if="{{activeTab == 2 ? true : false}}">
+        <view class="topic-container">
+          <blcok wx:for="{{indexTopic}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+            <view class="item" bindtap="clickTopic" data-id="{{item.id}}">
+              <view class="top">
+                <block wx:if="{{item.images}}">
+                  <image class="image" src="{{item.images.url}}" />
+                </block>
+                <block wx:else>
+                  <image class="image" src="../assets/images/test.jpg"/>
+                </block>
+                <view class="title">{{item.name}}</view>
+              </view>
+              <block wx:if="{{item.des}}">
+                <view class="des">{{item.des}}</view>
+              </block>
+              <block wx:else>
+                <view class="des">暂无</view>
+              </block>
+              <view class="bottom">
+                <view class="headers">
+                  <block wx:if="{{item.post_topics_count > 0}}">
+                    <block  wx:for="{{item.posts}}" wx:key="unique" wx:for-index="idPost" wx:for-item="itemPost">
+                      <image class="image" src="{{itemPost.user_info.avatar}}"/>
+                    </block>
+                  </block>
+                  <block wx:else>
+                    <view class="text">暂无</view>
+                  </block>
+                </view>
+                <view class="text">活跃讨论者</view>
+              </view>
+            </view>
+          </blcok>
+        </view>
+      </block>
+      <!--内容 专题-->
+    </block>
+
+  </view>
+</template>
+
+<script>
+
+  import wepy from 'wepy'
+  import util from '../utils/util'
+//  import {apiFetchTestRedux} from '../redux/test/actions'
+  import {apiFetchGetTokenRedux} from '../redux/webApp/actions'
+  import {apiFetchGetIndexPostRedux, apiFetchEmptyIndexPostRedux} from '../redux/post/actions'
+  import {apiFetchGetIndexCommentRedux, apiFetchEmptyIndexCommentRedux} from '../redux/comment/actions'
+  import {apiFetchGetIndexTopicRedux, apiFetchEmptyIndexTopicRedux} from '../redux/topic/actions'
+  import {apiFetchGetIndexImageRedux} from '../redux/image/actions'
+  import {apiFetchGetIndexSearchRedux} from '../redux/search/actions'
+  import store from '../store'
+  import {connect, setStore} from 'wepy-redux'
+  import wxLog from '../utils/wxLog'
+
+  setStore(store)
+  @connect({
+    indexPost: (state) => state.post.indexPost,
+    indexComment: (state) => state.comment.indexComment,
+    indexTopic: (state) => state.topic.indexTopic
+  })
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '首页',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: true
+    }
+
+    data = {
+      tabs: ['动态', '热门', '专题'], // 种类
+      windowWidth: 0, // 屏幕宽度
+      lineWidth: 0, // tab每个下划线的宽度
+      offset: 0, // 三个屏幕一共的宽度
+      activeTab: 0, // 当前激活页面
+      isLoading: true, // 是否在loading数据
+      loadingContainer: 0, // loading的效果
+      indexPost: [], // 动态
+      indexPostPage: 1,
+      indexPostSize: 5,
+      indexPostEnd: false, // 到底
+      indexComment: [], // 热门
+      indexCommentPage: 1,
+      indexCommentSize: 10,
+      indexCommentEnd: false, // 到底
+      indexTopic: [], // 专题
+      indexTopicPage: 1,
+      indexTopicSize: 5,
+      indexTopicEnd: false, // 到底
+      indexSearch: '知道', // 热门搜索
+      indexImage: [] // 图片数据
+    }
+
+    // 加载
+    async onLoad() {
+      const that = this
+
+//      wxLog.init({
+//        url: 'https://path/to/your/log/server',
+//        app: that
+//      })
+//      console.info(123)
+
+      //  请求
+//      await store.dispatch(apiFetchTestRedux({
+//        id: 123
+//      }, (res) => {
+//        console.log(res)
+//      }))
+//      const {test} = store.getState()
+//      console.log(test)
+
+      // 随机loading动画效果
+      that.loadingContainer = util.common.random([0, 2])
+
+      // 获取屏幕宽度
+      const systemInfo = await util.wxGetInfo.getSystemInfoPromise()
+      const windowWidth = systemInfo.windowWidth // 屏幕宽度
+      that.lineWidth = windowWidth / that.tabs.length // 每一个的长度
+      that.windowWidth = windowWidth // 总宽度
+      that.$apply()
+
+      // 获取token
+      const code = await util.wxGetInfo.loginPromise()
+      const userInfo = await util.wxGetInfo.getUserInfoPromise()
+      const res = await store.dispatch(apiFetchGetTokenRedux({
+        code: code.code,
+        rawData: userInfo.rawData,
+        signature: userInfo.signature,
+        encryptedData: userInfo.encryptedData,
+        iv: userInfo.iv
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const token = res.data.message.token
+        const userInfo = res.data.message.userInfo
+        if (token) {
+          // 写入storage
+          wepy.setStorageSync('token', token)
+
+          // 加载热门数据
+          await that.pullSearchContent()
+          // 加载图片数据
+          await that.getIndexImage(5)
+          // 加载数据  动态数据
+          await that.pullData(0, 1)
+          // 加载数据  热门数据
+          await that.pullData(1, 1)
+          // 加载数据  专题数据
+          await that.pullData(2, 1)
+
+          // 关闭loading动画
+          that.isLoading = false
+          that.$apply()
+        } else if (userInfo) { // 跳转绑定界面
+          wepy.setStorageSync('bindingEmailUserInfo', userInfo)
+          util.wxGoTo.redirectTo('./register')
+        }
+      }
+    }
+
+    // 下拉 刷新
+    async onPullDownRefresh() {
+      const that = this
+      that.isLoading = true
+      await that.emptyData(that.activeTab)
+      await that.pullData(that.activeTab, 1)
+      that.isLoading = false
+      that.$apply()
+      wepy.stopPullDownRefresh()
+    }
+
+    // 上拉 拉去更多数据
+    async onReachBottom() {
+      const that = this
+      that.addData(that.activeTab)
+    }
+
+    // 动作
+    methods = {
+      // 更新选择的页面
+      async updateSelectedPage (e) {
+        const that = this
+        let page = e.currentTarget.dataset.index
+        that.activeTab = page // 当前激活页面
+        that.offset = that.windowWidth * page
+        that.$apply()
+      },
+      // 跳转搜索页面
+      async clickSearch () {
+        util.wxGoTo.navigateTo('./search')
+      },
+      // 跳转发表页面
+      async clickPublish () {
+        util.wxGoTo.navigateTo('./publish?type=post')
+      },
+      // 跳转文章 post
+      async clickPost (e) {
+        let id = e.currentTarget.dataset.id
+        util.wxGoTo.navigateTo(`./post?id=${id}`)
+      },
+      // 跳转专题
+      async clickTopic (e) {
+        let id = e.currentTarget.dataset.id
+        util.wxGoTo.navigateTo(`./topic?id=${id}`)
+      }
+    }
+
+    // 拉取搜索记录
+    async pullSearchContent() {
+      const that = this
+      const res = await store.dispatch(apiFetchGetIndexSearchRedux({
+        token: wepy.getStorageSync('token'),
+        num: 1
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess && res.data.message[0]) {
+        const state = store.getState()
+        that.indexSearch = state.search.indexSearch[0]['keyword']
+      }
+      that.$apply()
+    }
+
+    // 拉取动态文章
+    async getIndexPost (page, size) {
+      const that = this
+      const res = await store.dispatch(apiFetchGetIndexPostRedux({
+        token: wepy.getStorageSync('token'),
+        page: page,
+        size: size
+      }))
+
+      // 判断有没有新数据，不写入store
+      if (res.data.message.length === 0) {
+        that.indexPostEnd = true
+        that.indexPostPage = that.indexPostPage - 1
+      }
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.indexPost = state.post.indexPost
+      }
+      that.$apply()
+    }
+
+    // 拉取热门文章
+    async getIndexComment (page, size) {
+      const that = this
+      const res = await store.dispatch(apiFetchGetIndexCommentRedux({
+        token: wepy.getStorageSync('token'),
+        page: page,
+        size: size
+      }))
+
+      // 判断有没有新数据，不写入store
+      if (res.data.message.length === 0) {
+        that.indexCommentEnd = true
+        that.indexCommentPage = that.indexCommentPage - 1
+      }
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.indexComment = state.comment.indexComment
+        that.$apply()
+      }
+    }
+
+    // 拉取专题
+    async getIndexTopic (page, size) {
+      const that = this
+      const res = await store.dispatch(apiFetchGetIndexTopicRedux({
+        token: wepy.getStorageSync('token'),
+        page: page,
+        size: size
+      }))
+
+      // 判断有没有新数据，不写入store
+      if (res.data.message.length === 0) {
+        that.indexTopicEnd = true
+        that.indexTopicPage = that.indexTopicPage - 1
+      }
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.indexTopic = state.topic.indexTopic
+        that.$apply()
+      }
+    }
+
+    // 拉取图片
+    async getIndexImage (size) {
+      const that = this
+      const res = await store.dispatch(apiFetchGetIndexImageRedux({
+        token: wepy.getStorageSync('token'),
+        size: size
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.indexImage = state.image.indexImage
+        that.$apply()
+      }
+    }
+
+    // 拉取数据 不操作page
+    async pullData(tab, page) {
+      const that = this
+      switch (parseInt(tab)) {
+        case 0:
+          await that.getIndexPost(page, that.indexPostSize)
+          break
+        case 1:
+          await that.getIndexComment(page, that.indexCommentSize)
+          break
+        case 2:
+          await that.getIndexTopic(page, that.indexTopicSize)
+          break
+      }
+    }
+
+    // 拉取数据 page+1
+    async addData(tab) {
+      const that = this
+      switch (parseInt(tab)) {
+        case 0:
+          if (!that.indexPostEnd) {
+            that.indexPostPage = that.indexPostPage + 1
+            await that.pullData(tab, that.indexPostPage)
+          }
+          break
+        case 1:
+          if (!that.indexCommentEnd) {
+            that.indexCommentPage = that.indexCommentPage + 1
+            await that.pullData(tab, that.indexCommentPage)
+          }
+          break
+        case 2:
+          if (!that.indexTopicEnd) {
+            that.indexTopicPage = that.indexTopicPage + 1
+            await that.pullData(tab, that.indexTopicPage)
+          }
+          break
+      }
+      that.$apply()
+    }
+
+    // 清空数据
+    async emptyData(tab) {
+      const that = this
+      switch (parseInt(tab)) {
+        case 0:
+          that.indexPost = []
+          that.indexPostPage = 1
+          that.indexPostEnd = false
+          store.dispatch(apiFetchEmptyIndexPostRedux())
+          break
+        case 1:
+          that.indexComment = []
+          that.indexCommentPage = 1
+          that.indexCommentEnd = false
+          store.dispatch(apiFetchEmptyIndexCommentRedux())
+          break
+        case 2:
+          that.indexTopic = []
+          that.indexTopicPage = 1
+          that.indexTopicEnd = false
+          store.dispatch(apiFetchEmptyIndexTopicRedux())
+          break
+      }
+      that.$apply()
+    }
+  }
+</script>

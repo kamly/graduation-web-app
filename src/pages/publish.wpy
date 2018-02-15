@@ -1,0 +1,426 @@
+/**
+* Created by lijiaming on 2017/12/26.
+*/
+
+<style lang="less" rel="stylesheet/less">
+  .index-container {
+
+    /*输入框*/
+    .input-container {
+      margin-top: 20rpx;
+      padding: 20rpx;
+      background-color: #ffffff;
+      .input-title, .input-des {
+        padding: 10rpx 0;
+        border-bottom: 2rpx solid #808087;
+      }
+      .input-des {
+        width: 100%;
+        height: 100rpx;
+      }
+      .input-article {
+        width: 100%;
+        height: 500rpx;
+        padding: 10rpx 0;
+      }
+      .image {
+        width: 100%;
+        margin-top: 10rpx;
+        image{
+          width: 130rpx;
+          height: 130rpx;
+          margin-right: 12rpx;
+        }
+      }
+    }
+    /*按钮*/
+    .button-container {
+      position: fixed;
+      bottom: 0;
+      width: 90%;
+      display: flex;
+      justify-content: center;
+      background-color: #ffffff;
+      padding: 30rpx 40rpx;
+      .button-able, .button-disabled {
+        width: 100%;
+        border-radius: 50rpx;
+        text-align: center;
+      }
+      .button-able {
+        background-color: #619ff8;
+        color: #ffffff;
+      }
+      .button-disabled {
+        background-color: #f0f0f0;
+        color: #4c4c4c;
+      }
+    }
+    /*动效*/
+    .loading-container {
+      margin: 450rpx auto 0 auto;
+      display: block;
+      width: 120rpx;
+      height: 120rpx;
+      position: relative;
+      text-align: center;
+
+      -webkit-animation: rotate 2.0s infinite linear;
+      animation: rotate 2.0s infinite linear;
+      .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #2d80ff;
+        border-radius: 100%;
+
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+      }
+
+      .dot2 {
+        top: auto;
+        bottom: 0px;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+      }
+
+      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+      @-webkit-keyframes bounce {
+        0%, 100% { -webkit-transform: scale(0.0) }
+        50% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(0.0);
+          -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+          }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="index-container">
+
+    <block wx:if="{{isLoading}}">
+      <div class="loading-container">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
+    </block>
+
+    <block wx:if="{{!isLoading}}">
+      <view class="input-container">
+        <block wx:if="{{type == 'post'}}">
+          <input class="input-title" placeholder="请输入标题" value="{{title}}" bindinput="inputTitle"/>
+          <textarea class="input-des" placeholder="请输入描述" value="{{des}}" bindinput="inputDes"/>
+        </block>
+        <textarea class="input-article" show-confirm-bar placeholder="{{type == 'post' ? '请输入文章' : '请输入评论'}}" value="{{content}}" bindinput="inputArticle"/>
+        <view class="image">
+          <block wx:for="{{images}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+            <image src="{{item}}" data-id="{{id}}" bindtap="clickDelImage" />
+          </block>
+          <image src="../assets/images/image.svg" bindtap="clickAddImage" wx:if="{{!limitImage}}" />
+        </view>
+      </view>
+      <view class="button-container">
+        <block wx:if="{{!disableSend}}">
+          <button class="button-able" bindtap="clickPublish">提交</button>
+        </block>
+        <block wx:else>
+          <button class="button-disabled" disabled="true" >正在上传</button>
+        </block>
+      </view>
+    </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../utils/util'
+  import {apiFetchGetShowPostRedux, apiFetchUpdatePostRedux, apiFetchCreatePostRedux} from '../redux/post/actions'
+  import {apiFetchGetShowCommentRedux, apiFetchUpdateCommentRedux, apiFetchCreateCommentRedux} from '../redux/comment/actions'
+  import {apiFetchUploadImageRedux} from '../redux/image/actions'
+  import store from '../store'
+  import {connect, setStore} from 'wepy-redux'
+
+  setStore(store)
+  @connect({
+  }, {
+    apiFetchUpdatePostRedux,
+    apiFetchCreatePostRedux,
+    apiFetchUpdateCommentRedux,
+    apiFetchCreateCommentRedux
+  })
+
+  export default class Publish extends wepy.page {
+    config = {
+      navigationBarTitleText: '发表',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTextStyle: 'black',
+      disableScroll: true
+    }
+    data = {
+      id: '', // 序号
+      postId: '', // 文章序号
+      type: '', // 类型
+      isLoading: true, // 加载
+      title: '', // 标题
+      des: '', // 描述
+      content: '', // 内容
+      images: [], // 图片内容
+      imagesId: [], // 图片序号
+      limitImage: false, // 3张
+      disableSend: false // 不能发送
+    }
+
+    async onLoad(e) {
+      const that = this
+      that.type = e.type || 0
+      that.id = e.id || 0
+      that.postId = e.postId || 0
+
+      if (that.id) {
+        if (that.type === 'post') {
+          await that.getShowPost()
+        } else if (that.type === 'reply') {
+          await that.getShowComment()
+        }
+      }
+
+      // 关闭loading动画
+      that.isLoading = false
+      that.$apply()
+    }
+
+    // 拉取文章
+    async getShowPost () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetShowPostRedux({
+        token: wepy.getStorageSync('token'),
+        id: that.id,
+        showType: 'edit'
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.title = state.post.showPostDraft.title
+        that.des = state.post.showPostDraft.des
+        that.content = state.post.showPostDraft.content
+        that.images = state.post.showPostDraft.images
+        that.imagesId = state.post.showPostDraft.imagesId
+      }
+      that.$apply()
+    }
+
+    // 拉取评论
+    async getShowComment () {
+      const that = this
+      const res = await store.dispatch(apiFetchGetShowCommentRedux({
+        token: wepy.getStorageSync('token'),
+        id: that.id,
+        showType: 'edit'
+      }))
+
+      // 获取数据
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const state = store.getState()
+        that.content = state.comment.showCommentDraft.content
+        that.images = state.comment.showCommentDraft.images
+        that.imagesId = state.comment.showCommentDraft.imagesId
+      }
+      that.$apply()
+    }
+
+    // 动作
+    methods = {
+      // 点击发表
+      async clickPublish () {
+        const that = this
+        if (that.disableSend) {
+          util.wxToast.showModal('错误提示', '暂不能发表', false)
+          return
+        }
+        if (that.type === 'post') { // 发帖更改
+          if (!that.title || !that.content) {
+            util.wxToast.showModal('错误提示', '标题或者内容不能为空', false)
+            return
+          }
+          if (that.id) { // 更新
+            that.updatePost()
+          } else {
+            that.createPost()
+          }
+        } else if (that.type === 'reply') { // 评论
+          if (!that.content) {
+            util.wxToast.showModal('错误提示', '内容不能为空', false)
+            return
+          }
+          if (that.id) { // 更新
+            that.updateComment()
+          } else {
+            that.createComment()
+          }
+        }
+      },
+
+      // 获取输入
+      async inputTitle (event) {
+        this.title = event.detail.value
+      },
+      async inputDes (event) {
+        this.des = event.detail.value
+      },
+      async inputArticle (event) {
+        this.content = event.detail.value
+      },
+
+      // 增加图片
+      async clickAddImage () {
+        const that = this
+        const chooseImage = await util.wxGetInfo.chooseImagePromise()
+        const images = that.images
+        images.push(...chooseImage.tempFilePaths)
+        that.images = images
+        that.disableSend = true
+        // 是不是已经等于3张
+        if (that.images.length === 3) {
+          that.limitImage = true
+        }
+        that.$apply()
+        // 上传图片
+        that.uploadImage(chooseImage.tempFilePaths[0])
+      },
+
+      // 删除图片
+      async clickDelImage (e) {
+        const that = this
+        const id = e.currentTarget.dataset.id
+        const images = that.images
+        const imagesId = that.imagesId
+        images.splice(id, 1)
+        imagesId.splice(id, 1)
+        that.images = images
+        that.imagesId = imagesId
+        that.$apply()
+      }
+    }
+
+    /*
+     * 创建发帖
+     */
+    async createPost () {
+      const that = this
+      const res = await store.dispatch(apiFetchCreatePostRedux({
+        token: wepy.getStorageSync('token'),
+        title: that.title,
+        des: that.des,
+        content: that.content,
+        imagesId: that.imagesId
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        await util.wxToast.success(1000, res.data.message.result)
+        await util.common.sleepPromise(1)
+        await util.wxGoTo.switchTab(`./index`)
+      }
+    }
+
+    /*
+     * 更新发帖
+     */
+    async updatePost () {
+      const that = this
+      const res = await store.dispatch(apiFetchUpdatePostRedux({
+        token: wepy.getStorageSync('token'),
+        id: that.id,
+        title: that.title,
+        des: that.des,
+        content: that.content,
+        imagesId: that.imagesId
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        await util.wxToast.success(1000, res.data.message.result)
+        await util.common.sleepPromise(1)
+        await util.wxGoTo.navigateBack(1)
+      }
+    }
+
+    /*
+     * 创建评论
+     */
+    async createComment () {
+      const that = this
+      const res = await store.dispatch(apiFetchCreateCommentRedux({
+        token: wepy.getStorageSync('token'),
+        content: that.content,
+        postId: that.postId,
+        imagesId: that.imagesId
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        await util.wxToast.success(1000, res.data.message.result)
+        await util.common.sleepPromise(1)
+        await util.wxGoTo.navigateBack(1)
+      }
+    }
+
+    /*
+     * 更新评论
+     */
+    async updateComment () {
+      const that = this
+      const res = await store.dispatch(apiFetchUpdateCommentRedux({
+        token: wepy.getStorageSync('token'),
+        id: that.id,
+        content: that.content,
+        imagesId: that.imagesId
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        await util.wxToast.success(1000, res.data.message.result)
+        await util.common.sleepPromise(1)
+        await util.wxGoTo.navigateBack(1)
+      }
+    }
+
+    /*
+     * 上传图片
+     */
+    async uploadImage (img) {
+      const that = this
+      const res = await store.dispatch(apiFetchUploadImageRedux({
+        token: wepy.getStorageSync('token'),
+        filePath: img,
+        type: that.type
+      }))
+
+      const isSuccess = await util.common.isSuccessPromise(res.data)
+      if (isSuccess) {
+        const imagesId = that.imagesId
+        const id = [parseInt(res.data.message.id)]
+        imagesId.push(...id)
+        that.imagesId = imagesId
+        that.disableSend = false
+        that.$apply()
+      }
+    }
+  }
+</script>

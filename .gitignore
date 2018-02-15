@@ -1,0 +1,12 @@
+.idea
+.vscode
+.DS_Store
+.wepycache
+*.log
+npm-debug.log
+src/config.js
+dist
+node_modules
+package-lock.json
+
+
