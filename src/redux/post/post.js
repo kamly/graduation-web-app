@@ -247,6 +247,8 @@ export const post = handleActions({
         value.title = post.title
         value.des = post.des
         value.content = post.content
+        value.markdown = post.markdown
+        value.html2Array = post.html2Array
         value.images = post.images
         value.imagesId = post.imagesId
       }

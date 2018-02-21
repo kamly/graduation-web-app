@@ -217,7 +217,7 @@
         const state = store.getState()
         that.title = state.post.showPostDraft.title
         that.des = state.post.showPostDraft.des
-        that.content = state.post.showPostDraft.content
+        that.content = state.post.showPostDraft.markdown
         that.images = state.post.showPostDraft.images
         that.imagesId = state.post.showPostDraft.imagesId
       }

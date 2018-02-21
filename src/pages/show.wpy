@@ -179,7 +179,7 @@
         </view>
         <view class="remark-container">
           <block wx:if="{{userInfo.note}}">
-            <rich-text class="text" nodes="{{userInfo.html}}"></rich-text>
+            <rich-text class="text" nodes="{{userInfo.html2Array}}"></rich-text>
           </block>
           <block wx:else>
             <rich-text class="text" nodes="暂无"></rich-text>

@@ -241,12 +241,14 @@ export const user = handleActions({
     nextState.showInfo.des = user.des
     nextState.showInfo.avatar = user.avatar
     nextState.showInfo.note = user.note
+    nextState.showInfo.html2Array = user.html2Array
     nextState.showInfo.html = user.html
     nextState.showInfo.sex = user.sex
     // myInfo
     nextState.myInfo.name = user.name
     nextState.myInfo.des = user.des
     nextState.myInfo.avatar = user.avatar
+    nextState.myInfo.html2Array = user.html2Array
     nextState.myInfo.note = user.note
     nextState.myInfo.html = user.html
     nextState.myInfo.sex = user.sex
@@ -318,6 +320,8 @@ export const user = handleActions({
           value.title = post.title
           value.des = post.des
           value.content = post.content
+          value.markdown = post.markdown
+          value.html2Array = post.html2Array
         }
       })
     }
@@ -337,6 +341,8 @@ export const user = handleActions({
           value.post.title = post.title
           value.post.des = post.des
           value.post.content = post.content
+          value.post.markdown = post.markdown
+          value.post.html2Array = post.html2Array
         }
       })
     }

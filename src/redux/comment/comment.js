@@ -162,6 +162,8 @@ export const comment = handleActions({
         value.post.title = post.title
         value.post.des = post.des
         value.post.content = post.content
+        value.post.markdown = post.markdown
+        value.post.html2Array = post.html2Array
       }
     })
     return nextState

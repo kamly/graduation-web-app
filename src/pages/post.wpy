@@ -337,7 +337,7 @@
         </view>
 
         <view class="post-container">
-          <rich-text class="text" nodes="{{showPost.html}}"></rich-text>
+          <rich-text class="text" nodes="{{showPost.html2Array}}"></rich-text>
           <view class="images">
             <block wx:for="{{showPost.images}}" wx:key="unique" wx:for-index="id" wx:for-item="item" class="images">
             <image src="{{item}}"/>
