@@ -48,13 +48,13 @@ class WxLog {
     this.stylize = config.stylize == null ? true : config.stylize;
 
     // 默认的间隔发送时间（毫秒）
-    const defaultInterval = 100000;
+    const defaultInterval = 100;
 
     // 间隔发送时间
     this.interval = config.interval == null ? defaultInterval : config.interval;
 
     // 默认的最大请求出错次数
-    const defaultMaxErrorReq = 5;
+    const defaultMaxErrorReq = 1;
 
     // 发送请求出错的最大次数，超过此次数则不再发送请求，但依然会记录请求到队列中
     this.maxErrorReq = config.maxErrorReq == null ? defaultMaxErrorReq : config.maxErrorReq;
@@ -207,7 +207,9 @@ class WxLog {
         this.requestTask = wx.request({
           url: this.url,
           method: 'POST',
-          data: JSON.stringify(this.queue),
+          data: {
+            'logs' : JSON.stringify(this.queue)
+          },
           header: {
             'content-type': 'application/json'
           },
@@ -337,7 +339,11 @@ class WxLog {
     if (this.console) {
       args.unshift(`{${this.app.$parent.globalData.reqId}}`);
       if (this.stylize) {
-        this.console[level](`%c[${this._getTimeString(time)}] [${level.toUpperCase()}] -`, `color: ${WxLog.colorEnum[level]}`, ...args);
+        if (level == 'info') {
+          this.console[level](`%c[${this._getTimeString(time)}] [${level.toUpperCase()}] -`, `color: ${WxLog.colorEnum[level]}`, ...args);
+        } else {
+          this.console[level](`[${this._getTimeString(time)}] [${level.toUpperCase()}] -`, ...args);
+        }
       } else {
         this.console[level](...args);
       }

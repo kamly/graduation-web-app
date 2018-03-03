@@ -25,7 +25,7 @@ function random(range) {
 }
 
 
-// 判断返回值是否有误
+// 判断返回值是否有误 , action里面的判断
 function isSuccess(data) {
   if (data.errorCode === 0) {
     return true
@@ -34,13 +34,14 @@ function isSuccess(data) {
 }
 
 
-// 是否成功 默认跳转首页
+// 是否成功 默认跳转首页, page里面的判断
 function isSuccessPromise(data, redirect = true) {
   return new Promise(function (resolve, reject) {
     if (data.errorCode === 0) {
       // 没有错误，直接返回
       resolve(true)
     } else {
+      console.error({type: 'requestError', data})
       // 提示
       wx.showModal({
         title: '提示',

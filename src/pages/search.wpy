@@ -242,7 +242,7 @@
 
     <block wx:if="{{!isLoading && !isSearch}}">
       <view class="hot-container">
-        <view class="title">AC热搜</view>
+        <view class="title">知道热搜</view>
         <view class="content">
           <view wx:for="{{indexSearch}}" wx:key="unique" class="item" wx:for-index="id" wx:for-item="item">
             <view class="item-inner">

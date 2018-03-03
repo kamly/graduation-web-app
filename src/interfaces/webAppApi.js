@@ -6,13 +6,13 @@ export default class API {
    * 获取token
    */
   static getToken(code, rawData, signature, encryptedData, iv) {
-    return wxNet.sendRequest({}, `${Config.HOST.AC}/webapp/token`, 'POST', {code, rawData, signature, encryptedData, iv})
+    return wxNet.sendRequest({}, `${Config.HOST.ZD}/webapp/token`, 'POST', {code, rawData, signature, encryptedData, iv})
   }
 
   /**
    * 获取二维码B接口
    */
   static createQrcodeB(token, scene, page, width) {
-    return wxNet.sendRequest(token, `${Config.HOST.AC}/webapp/createQrcodeB`, 'POST', {scene, page, width})
+    return wxNet.sendRequest(token, `${Config.HOST.ZD}/webapp/createQrcodeB`, 'POST', {scene, page, width})
   }
 }

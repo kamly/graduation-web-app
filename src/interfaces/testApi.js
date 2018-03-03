@@ -7,6 +7,6 @@ export default class API {
    * 测试
    */
   static getTest(data) {
-    return wxNet.sendRequest({}, `${Config.HOST.AC}/index`, 'GET', {data})
+    return wxNet.sendRequest({}, `${Config.HOST.ZD}/index`, 'GET', {data})
   }
 }

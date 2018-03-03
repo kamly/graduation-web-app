@@ -584,7 +584,7 @@
   import {apiFetchGetIndexSearchRedux} from '../redux/search/actions'
   import store from '../store'
   import {connect, setStore} from 'wepy-redux'
-  import wxLog from '../utils/wxLog'
+  import logApi from '../interfaces/logApi'
 
   setStore(store)
   @connect({
@@ -629,11 +629,8 @@
     async onLoad() {
       const that = this
 
-//      wxLog.init({
-//        url: 'https://path/to/your/log/server',
-//        app: that
-//      })
-//      console.info(123)
+      logApi.wxLogInit(that)
+      console.info({'type': 'click', 'test': 13})
 
       //  请求
 //      await store.dispatch(apiFetchTestRedux({
