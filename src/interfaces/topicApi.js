@@ -15,11 +15,4 @@ export default class API {
   static getShowTopic(token, id) {
     return wxNet.sendRequest(token, `${Config.HOST.AC}/topic/${id}/show`, 'GET', {})
   }
-
-  /**
-   * 专题，文章内容
-   */
-  static getTopicPost(token, id) {
-    return wxNet.sendRequest(token, `${Config.HOST.AC}/topic/${id}/topicPost`, 'GET', {})
-  }
 }

@@ -57,26 +57,6 @@ export const topic = handleActions({
     return nextState
   },
 
-  // 获取专题文章
-  FETCH_GET_TOPIC_POST_REQ: (state, action) => ({
-    ...state, ...
-      {
-        isFetching: true,
-      }
-  }),
-  FETCH_GET_TOPIC_POST_RCV: (state, action) => {
-    let nextState = {...state}
-    let topicPost = action.payload.res.data.message
-    nextState.topicPost = topicPost
-    nextState.isFetching = false
-    return nextState
-  },
-  FETCH_GET_TOPIC_POST_ERR: (state, action) => {
-    // 发生错误，wpy页面进行处理，这里看后续需求添加内容
-    let nextState = {...state}
-    nextState.isFetching = false
-    return nextState
-  },
 
   /*
    * 更新post 更新indexTopic
@@ -98,5 +78,4 @@ export const topic = handleActions({
   isFetching: false,
   indexTopic: [],
   showTopic: [],
-  topicPost: [],
 })

@@ -206,7 +206,12 @@
                     <image class="more" src="../assets/images/more.svg"/>
                   </view>
                   <view class="title">{{item.title}}</view>
-                  <view class="article">{{item.des}}</view>
+                  <block wx:if="{{item.des}}">
+                    <view class="article">{{item.des}}</view>
+                  </block>
+                  <block wx:else>
+                    <view class="article">暂无描述</view>
+                  </block>
                 </view>
               </blcok>
             </view>

@@ -16,12 +16,6 @@ export const actions = createActions({
   FETCH_GET_SHOW_TOPIC_RCV: null,
   FETCH_GET_SHOW_TOPIC_ERR: null,
 
-  // 专题，文章内容
-  FETCH_GET_TOPIC_POST_REQ: null,
-  FETCH_GET_TOPIC_POST_RCV: null,
-  FETCH_GET_TOPIC_POST_ERR: null,
-
-
 })
 
 
@@ -74,22 +68,4 @@ export function apiFetchGetShowTopicRedux(data) {
 }
 
 
-/**
- * 专题，文章内容 ok
- */
-export function apiFetchGetTopicPostRedux(data) {
-
-  const {token, id} = data;
-
-  return async function (dispatch) {
-    dispatch(actions.fetchGetTopicPostReq())
-    const res = await topicApi.getTopicPost(token, id)
-    if (isSuccess(res.data)) {
-      dispatch(actions.fetchGetTopicPostRcv({res}))
-    } else {
-      dispatch(actions.fetchGetTopicPostErr({res}))
-    }
-    return res
-  }
-}
 

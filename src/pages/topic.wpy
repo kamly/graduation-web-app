@@ -174,17 +174,19 @@
           <view class="des">{{showTopic.des}}</view>
         </block>
         <block wx:else>
-          <view class="des">暂无</view>
+          <view class="des">暂无描述</view>
         </block>
         <view class="bottom">
           <view class="headers">
             <block wx:if="{{showTopic.post_topics_count > 0}}">
               <block  wx:for="{{showTopic.posts}}" wx:key="unique" wx:for-index="idPost" wx:for-item="itemPost">
-                <image class="image" src="{{itemPost.user_info.avatar}}"/>
+                <block wx:if="{{idPost < 5}}">
+                  <image class="image" src="{{itemPost.user.avatar}}"/>
+                </block>
               </block>
             </block>
             <block wx:else>
-              <view class="text">暂无</view>
+              <view class="text">暂无讨论者</view>
             </block>
           </view>
           <view class="text">活跃讨论者</view>
@@ -194,17 +196,22 @@
 
       <!--内容-->
       <view class="content-container">
-        <blcok wx:for="{{topicPost}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+        <blcok wx:for="{{showTopic.posts}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
           <view class="item" bindtap="clickPost" data-id="{{item.id}}">
             <view class="top">
               <view class="auth">
-                <image class="image" src="{{item.user_info.avatar}}"/>
-                <view class="name-time">{{item.user_info.name}} · {{item.time}}</view>
+                <image class="image" src="{{item.user.avatar}}"/>
+                <view class="name-time">{{item.user.name}} · {{item.time}}</view>
               </view>
               <image class="more" src="../assets/images/more.svg"/>
             </view>
             <view class="title">{{item.title}}</view>
-            <view class="article">{{item.content}}</view>
+            <block wx:if="{{item.des}}">
+              <view class="des">{{item.des}}</view>
+            </block>
+            <block wx:else>
+              <view class="des">暂无描述</view>
+            </block>
             <view class="bottom">
               <view class="des">{{item.zans_count}} 赞 · {{item.comments_count}} 评论 · 去看看</view>
             </view>
@@ -220,7 +227,7 @@
 <script>
   import wepy from 'wepy'
   import util from '../utils/util'
-  import {apiFetchGetShowTopicRedux, apiFetchGetTopicPostRedux} from '../redux/topic/actions'
+  import {apiFetchGetShowTopicRedux} from '../redux/topic/actions'
   import store from '../store'
 
   export default class Topic extends wepy.page {
@@ -242,7 +249,6 @@
       const that = this
       that.id = e.id
       await that.getShowTopic()
-      await that.getTopicPost()
       // 关闭loading动画
       that.isLoading = false
       that.$apply()
@@ -253,7 +259,6 @@
       const that = this
       that.isLoading = true
       await that.getShowTopic()
-      await that.getTopicPost()
       // 关闭loading动画
       that.isLoading = false
       that.$apply()
@@ -281,23 +286,6 @@
       if (isSuccess) {
         const state = store.getState()
         that.showTopic = state.topic.showTopic
-      }
-      that.$apply()
-    }
-
-    // 获取专题文章
-    async getTopicPost () {
-      const that = this
-      const res = await store.dispatch(apiFetchGetTopicPostRedux({
-        token: wepy.getStorageSync('token'),
-        id: that.id
-      }))
-
-      // 获取数据
-      const isSuccess = await util.common.isSuccessPromise(res.data)
-      if (isSuccess) {
-        const state = store.getState()
-        that.topicPost = state.topic.topicPost
       }
       that.$apply()
     }

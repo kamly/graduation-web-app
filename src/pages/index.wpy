@@ -484,7 +484,12 @@
                   <image class="more" src="../assets/images/more.svg"/>
                 </view>
                 <view class="title">{{item.title}}</view>
-                <view class="article">{{item.des}}</view>
+                <block wx:if="{{item.des}}">
+                  <view class="article">{{item.des}}</view>
+                </block>
+                <block wx:else>
+                  <view class="article">暂无描述</view>
+                </block>
                 <view class="buttom">
                   <view class="des">{{item.zans_count}} 赞 · {{item.comments_count}} 评论 · 去看看</view>
                 </view>
@@ -541,17 +546,17 @@
                 <view class="des">{{item.des}}</view>
               </block>
               <block wx:else>
-                <view class="des">暂无</view>
+                <view class="des">暂无描述</view>
               </block>
               <view class="bottom">
                 <view class="headers">
                   <block wx:if="{{item.post_topics_count > 0}}">
                     <block  wx:for="{{item.posts}}" wx:key="unique" wx:for-index="idPost" wx:for-item="itemPost">
-                      <image class="image" src="{{itemPost.user_info.avatar}}"/>
+                      <image class="image" src="{{itemPost.user.avatar}}"/>
                     </block>
                   </block>
                   <block wx:else>
-                    <view class="text">暂无</view>
+                    <view class="text">暂无讨论者</view>
                   </block>
                 </view>
                 <view class="text">活跃讨论者</view>
