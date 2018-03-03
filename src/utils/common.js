@@ -48,6 +48,9 @@ function isSuccessPromise(data, redirect = true) {
         showCancel: false,
         success: function (res) {
           if (redirect) {
+            if (data.errorCode === 10003) {
+              wx.removeStorageSync('token')
+            }
             // 跳转
             wx.switchTab({
               url: 'index'

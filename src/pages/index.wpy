@@ -694,6 +694,31 @@
       }
     }
 
+    async onShow() {
+      const token = wepy.getStorageSync('token')
+      if (util.common.isEmpty(token)) {
+        // 获取token
+        const code = await util.wxGetInfo.loginPromise()
+        const userInfo = await util.wxGetInfo.getUserInfoPromise()
+        const res = await store.dispatch(apiFetchGetTokenRedux({
+          code: code.code,
+          rawData: userInfo.rawData,
+          signature: userInfo.signature,
+          encryptedData: userInfo.encryptedData,
+          iv: userInfo.iv
+        }))
+
+        const isSuccess = await util.common.isSuccessPromise(res.data)
+        if (isSuccess) {
+          const token = res.data.message.token
+          if (token) {
+            // 写入storage
+            wepy.setStorageSync('token', token)
+          }
+        }
+      }
+    }
+
     // 下拉 刷新
     async onPullDownRefresh() {
       const that = this

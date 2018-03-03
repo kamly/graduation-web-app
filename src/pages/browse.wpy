@@ -105,7 +105,12 @@
           <image class="header" src="{{item.post_info.user.avatar}}"/>
           <view class="text">
             <view class="title">{{item.post_info.title}}</view>
-            <view class="article">{{item.post_info.des}}</view>
+            <block wx:if="{{item.des}}">
+              <view class="article">{{item.post_info.des}}</view>
+            </block>
+            <block wx:else>
+              <view class="article">暂无描述</view>
+            </block>
           </view>
         </view>
       </blcok>
