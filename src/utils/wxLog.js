@@ -48,7 +48,7 @@ class WxLog {
     this.stylize = config.stylize == null ? true : config.stylize;
 
     // 默认的间隔发送时间（毫秒）
-    const defaultInterval = 100;
+    const defaultInterval = 1000;
 
     // 间隔发送时间
     this.interval = config.interval == null ? defaultInterval : config.interval;
