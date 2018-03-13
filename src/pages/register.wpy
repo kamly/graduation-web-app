@@ -10,57 +10,50 @@
   .index-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 150rpx;
-    .header-container {
-      .image {
-        width: 300rpx;
-        height: 300rpx;
-        border-radius: 50%;
-      }
+    padding: 0 72rpx;
+    .content-container view{
+      margin-top: 140rpx;
+      font-size: 58rpx;
+      color: #212121;
     }
     .input-container {
-      margin-top: 20rpx;
-      width: 600rpx;
-      padding: 20rpx;
-      background-color: #e2e2e2;
-      opacity: 0.3;
-      border-radius: 20rpx;
-      position: relative;
-      .line {
-        position: absolute;
-        top: 100rpx;
-        left: 30rpx;
-        width: 552rpx;
-        border: 0.1rpx solid #0e0e0e;
+      margin-top: 284rpx;
+      .input-placeholder{
+        font-size: 36rpx;
+        color: #bdbdbd;
       }
       .input {
-        .item {
-          margin: 20rpx;
-        }
+        padding-bottom: 48rpx;
+        border-bottom: 3rpx solid #e5e5e5;
+      }
+      .input-password {
+        margin-top: 50rpx;
       }
     }
     .bottom-container {
-      margin-top: 20rpx;
-      width: 640rpx;
+      margin-top: 78rpx;
+      .bottom {
+        height: 90rpx;
+        background-color: #0084ff;
+        color: #ffffff;
+        font-size: 36rpx;
+      }
     }
   }
 </style>
 
 <template>
-  <view class="index-container" style="height: {{windowHeight}}px">
-    <view class="header-container">
-      <image class="image" src="{{userInfoFromWeApp.avatarUrl}}"/>
+  <view class="index-container">
+    <view class="content-container">
+      <view>Hello {{userInfoFromWeApp.gender == 1 ? 'Boy' : 'Girl' }} ！</view>
     </view>
     <view class="input-container">
-      <span class="line"></span>
-      <view class="input">
-        <input class="item" placeholder="请输入邮箱" value="{{inputEmail}}" bindinput="inputEmail"/>
-        <input class="item" placeholder="请输入密码" value="{{inputPassword}}" bindinput="inputPassword" type="password"/>
-      </view>
+      <input class="input input-email" placeholder="邮箱" value="{{inputEmail}}" bindinput="inputEmail"/>
+      <input class="input input-password" placeholder="密码" value="{{inputPassword}}" bindinput="inputPassword"
+             type="password"/>
     </view>
     <view class="bottom-container">
-      <button type="default" bindtap="clickBinding"> 绑定 </button>
+      <button class="bottom" type="default" bindtap="clickBinding"> 绑定 </button>
     </view>
   </view>
 </template>
@@ -79,7 +72,6 @@
       disableScroll: true
     }
     data = {
-      windowHeight: 0, // 屏幕宽度
       userInfo: '', // 用户信息
       inputEmail: '', // 用户输入的邮箱
       inputPassword: '', // 用户输入的密码
@@ -87,10 +79,6 @@
     }
     async onLoad() {
       const that = this
-
-      // 获取屏幕宽度
-      const systemInfo = await util.wxGetInfo.getSystemInfoPromise()
-      that.windowHeight = systemInfo.windowHeight
 
       // 获取用户信息
       const userInfoFromWeApp = await util.wxGetInfo.getUserInfoPromise()
