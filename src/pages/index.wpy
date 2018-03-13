@@ -415,12 +415,12 @@
       <!--搜索-->
       <view class="search-container">
         <view class="search" bindtap="clickSearch">
-          <image class="search-image" src="../assets/images/search.svg"></image>
+          <image class="search-image" src="https://images.charmingkamly.cn/system/search.png"></image>
 
           <view class="search-text">{{indexSearch}}</view>
         </view>
         <view class="post" bindtap="clickPublish">
-          <image class="post-image" src="../assets/images/post.svg"></image>
+          <image class="post-image" src="https://images.charmingkamly.cn/system/post.png"></image>
           <view class="post-text">发表</view>
         </view>
       </view>
@@ -481,7 +481,7 @@
                     <image class="image" src="{{item.user.avatar}}"/>
                     <view class="name-time">{{item.user.name}} · {{item.time}}</view>
                   </view>
-                  <image class="more" src="../assets/images/more.svg"/>
+                  <image class="more" src="https://images.charmingkamly.cn/system/more.png"/>
                 </view>
                 <view class="title">{{item.title}}</view>
                 <block wx:if="{{item.des}}">
@@ -538,7 +538,7 @@
                   <image class="image" src="{{item.images.url}}" />
                 </block>
                 <block wx:else>
-                  <image class="image" src="../assets/images/test.jpg"/>
+                  <image class="image" src="https://images.charmingkamly.cn/system/default.png"/>
                 </block>
                 <view class="title">{{item.name}}</view>
               </view>
@@ -584,7 +584,7 @@
   import {apiFetchGetIndexSearchRedux} from '../redux/search/actions'
   import store from '../store'
   import {connect, setStore} from 'wepy-redux'
-  import logApi from '../interfaces/logApi'
+//  import logApi from '../interfaces/logApi'
 
   setStore(store)
   @connect({
@@ -629,8 +629,8 @@
     async onLoad() {
       const that = this
 
-      logApi.wxLogInit(that)
-      console.info({'type': 'click', 'test': 13})
+//      logApi.wxLogInit(that)
+//      console.info({'type': 'click', 'test': 13})
 
       //  请求
 //      await store.dispatch(apiFetchTestRedux({

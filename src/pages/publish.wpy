@@ -129,7 +129,8 @@
           <block wx:for="{{images}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
             <image src="{{item}}" data-id="{{id}}" bindtap="clickDelImage" />
           </block>
-          <image src="../assets/images/image.svg" bindtap="clickAddImage" wx:if="{{!limitImage}}" />
+          <image src="https://images.charmingkamly.cn/system/add_image.png" bindtap="clickAddImage"
+                 wx:if="{{!limitImage}}" />
         </view>
       </view>
       <view class="button-container">

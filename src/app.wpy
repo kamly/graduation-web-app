@@ -48,20 +48,20 @@
           {
             'pagePath': 'pages/my',
             'text': '我的',
-            'iconPath': './assets/icons/my_1.png',
-            'selectedIconPath': './assets/icons/my_2.png'
+            'iconPath': './assets/icons/my-1.png',
+            'selectedIconPath': './assets/icons/my-2.png'
           },
           {
             'pagePath': 'pages/index',
             'text': '首页',
-            'iconPath': './assets/icons/head_1.png',
-            'selectedIconPath': './assets/icons/head_2.png'
+            'iconPath': './assets/icons/home-1.png',
+            'selectedIconPath': './assets/icons/home-2.png'
           },
           {
             'pagePath': 'pages/more',
             'text': '更多',
-            'iconPath': './assets/icons/more_1.png',
-            'selectedIconPath': './assets/icons/more_2.png'
+            'iconPath': './assets/icons/more-1.png',
+            'selectedIconPath': './assets/icons/more-2.png'
           }
         ]
       }

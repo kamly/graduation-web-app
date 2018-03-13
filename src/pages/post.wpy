@@ -306,7 +306,7 @@
 
         <view class="auth-container">
           <view class="left">
-            <image class="image" src="../assets/images/test.jpg"/>
+            <image class="image" src="{{showPost.user.avatar}}"/>
             <view class="name-des">
               <view class="name">{{showPost.user.name}}</view>
               <block wx:if="{{showPost.user.des}}">
@@ -325,11 +325,11 @@
             </view>
             <view wx:else  class="fan" bindtap="clickFan">
               <block wx:if="{{showPost.isFan}}">
-                <image class="image" src="../assets/images/add.svg"/>
+                <image class="image" src="https://images.charmingkamly.cn/system/add.png"/>
                 <view class="text">取消关注</view>
               </block>
               <block wx:else>
-                <image class="image" src="../assets/images/add.svg"/>
+                <image class="image" src="https://images.charmingkamly.cn/system/add.png"/>
                 <view class="text">关注</view>
               </block>
             </view>
@@ -347,25 +347,25 @@
 
         <view class="button-container">
           <view class="item" bindtap="clickShare">
-            <image class="image" src="../assets/images/test.jpg"/>
+            <image class="image" src="https://images.charmingkamly.cn/system/share.png"/>
             <view class="text">分享</view>
           </view>
           <view class="item" bindtap="clickZan">
             <block wx:if="{{showPost.isZan}}">
-              <image class="image" src="../assets/images/test.jpg"/>
+              <image class="image" src="https://images.charmingkamly.cn/system/like.png"/>
               <view class="text">取消点赞·{{showPost.zans_count}}</view>
             </block>
             <block wx:else>
-              <image class="image" src="../assets/images/test.jpg"/>
+              <image class="image" src="https://images.charmingkamly.cn/system/like.png"/>
               <view class="text">点赞·{{showPost.zans_count}}</view>
             </block>
           </view>
           <view class="item" bindtap="clickReply">
-            <image class="image" src="../assets/images/test.jpg"/>
+            <image class="image" src="https://images.charmingkamly.cn/system/comment.png"/>
             <view class="text">回复</view>
           </view>
           <view class="item" bindtap="clickReplies">
-            <image class="image" src="../assets/images/test.jpg"/>
+            <image class="image" src="https://images.charmingkamly.cn/system/comments.png"/>
             <view class="text">评论·{{showPost.comments_count}}</view>
           </view>
         </view>

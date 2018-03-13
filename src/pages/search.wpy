@@ -227,7 +227,7 @@
         <input class="search-text" placeholder="请输入搜索内容" value="{{search}}" bindinput="inputSearch"/>
       </view>
       <view class="post" bindtap="clickSearch">
-        <image class="post-image" src="../assets/images/search.svg"></image>
+        <image class="post-image" src="https://images.charmingkamly.cn/system/search.png"></image>
         <view class="post-text">搜索</view>
       </view>
     </view>
@@ -246,7 +246,7 @@
         <view class="content">
           <view wx:for="{{indexSearch}}" wx:key="unique" class="item" wx:for-index="id" wx:for-item="item">
             <view class="item-inner">
-              <image class="image" src="../assets/images/hot.svg"></image>
+              <image class="image" src="https://images.charmingkamly.cn/system/hot.png"></image>
               <view class="text">{{item.keyword}}</view>
             </view>
           </view>

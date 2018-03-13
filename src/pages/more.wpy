@@ -161,53 +161,53 @@
           <view class="des">暂无</view>
         </block>
       </view>
-      <image class="image-arrow" src="../assets/images/arrow.svg"/>
+      <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
     </view>
 
     <view class="fans-container">
       <view class="item" bindtap="clickStars">
-        <image class="image-top" src="../assets/images/focus.svg"/>
+        <image class="image-top" src="https://images.charmingkamly.cn/system/star.png"/>
         <view class="name-des">
           <view class="name">关注</view>
-          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
         </view>
       </view>
       <view class="item" bindtap="clickFans">
-        <image class="image-top" src="../assets/images/fans.svg"/>
+        <image class="image-top" src="https://images.charmingkamly.cn/system/fan.png"/>
         <view class="name-des">
           <view class="name">粉丝</view>
-          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
         </view>
       </view>
     </view>
 
     <view class="setting-container">
       <view class="item" bindtap="clickBrowses">
-        <image class="image-top" src="../assets/images/browse.svg"/>
+        <image class="image-top" src="https://images.charmingkamly.cn/system/browse.png"/>
         <view class="name-des">
           <view class="name">最近浏览</view>
-          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
         </view>
       </view>
       <view class="item">
-        <image class="image-top" src="../assets/images/light.svg"/>
+        <image class="image-top" src="https://images.charmingkamly.cn/system/light.png"/>
         <view class="name-des">
           <view class="name">夜间模式</view>
           <switch checked/>
         </view>
       </view>
       <view class="item">
-        <image class="image-top" src="../assets/images/fans.svg"/>
+        <image class="image-top" src="https://images.charmingkamly.cn/system/unbind.png"/>
         <view class="name-des">
           <view class="name">解绑</view>
-          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
         </view>
       </view>
       <view class="item">
-        <image class="image-top" src="../assets/images/feedback.svg"/>
+        <image class="image-top" src="https://images.charmingkamly.cn/system/tucao.png"/>
         <view class="name-des">
           <view class="name">用户反馈</view>
-          <image class="image-arrow" src="../assets/images/arrow.svg"/>
+          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
         </view>
       </view>
     </view>

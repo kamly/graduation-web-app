@@ -190,7 +190,7 @@
 
         <!--图标-->
         <view class="icon {{openSide ? 'openIconAnimate' : ''}} {{!openSide ? 'closeIconAnimate' : ''}}">
-          <image bindtap="clickIcon" src="../assets/images/close.png"></image>
+          <image bindtap="clickIcon" src="https://images.charmingkamly.cn/system/close.png"></image>
         </view>
 
         <!--发帖-->
@@ -203,7 +203,7 @@
                     <view class="auth">
                       <view class="name-time">{{item.time}}</view>
                     </view>
-                    <image class="more" src="../assets/images/more.svg"/>
+                    <image class="more" src="https://images.charmingkamly.cn/system/more.png"/>
                   </view>
                   <view class="title">{{item.title}}</view>
                   <block wx:if="{{item.des}}">
@@ -229,7 +229,7 @@
                       <image class="image" src="{{item.post_user.avatar}}"/>
                       <view class="name-time">{{item.post.time}}</view>
                     </view>
-                    <image class="more" src="../assets/images/more.svg"/>
+                    <image class="more" src="https://images.charmingkamly.cn/system/more.png"/>
                   </view>
                   <view class="title">标题：{{item.post.title}}</view>
                   <view class="article">评论：{{item.content}}</view>
@@ -249,7 +249,7 @@
                     <view class="auth">
                       <view class="name-time">{{item.time}}</view>
                     </view>
-                    <image class="more" src="../assets/images/more.svg"/>
+                    <image class="more" src="https://images.charmingkamly.cn/system/more.png"/>
                   </view>
                   <view class="title">{{item.info.title}}</view>
                   <view class="article">{{item.info.content}}</view>
