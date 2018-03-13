@@ -6,52 +6,46 @@
   .index-container {
     .my-container {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      margin-top: 30rpx;
-      padding: 20rpx;
       background-color: #ffffff;
       .image-user {
-        width: 80rpx;
-        height: 80rpx;
+        margin-top: 50rpx;
+        width: 164rpx;
+        height: 164rpx;
         border-radius: 50%;
-        margin-right: 20rpx;
       }
-      .name-des {
-        font-size: 32rpx;
-        width: 85%;
-        .des {
-          font-size: 24rpx;
-          color: #c5c5c5;
-        }
+      .name {
+        margin-top: 38rpx;
+        font-size: 36rpx;
+        color: #1a1a1a;
       }
-      .image-arrow {
-        width: 30rpx;
-        height: 30rpx;
+      .des {
+        font-size: 20rpx;
+        color: #cbcbcb;
       }
     }
     .fans-container {
-      margin-top: 30rpx;
-      padding: 20rpx;
+      padding: 50rpx 20rpx 20rpx 20rpx;
       background-color: #ffffff;
       .item {
         display: flex;
         align-items: center;
-        .image-top {
-          width: 60rpx;
-          height: 60rpx;
+        padding: 20rpx 0rpx;
+        .icon {
+          width: 40rpx;
+          height: 40rpx;
           margin-right: 20rpx;
         }
-        .name-des {
+        .name-arrow {
           display: flex;
           align-items: center;
           width: 100%;
-          border-bottom: 1rpx solid #efefef;
-          padding: 20rpx 0rpx;
           .name {
-            font-size: 32rpx;
+            font-size: 30rpx;
             width: 100%;
           }
-          .image-arrow {
+          .arrow {
             width: 30rpx;
             height: 30rpx;
           }
@@ -59,35 +53,36 @@
       }
     }
     .setting-container {
-      margin-top: 30rpx;
-      padding: 20rpx;
+      margin-top: 20rpx;
+      padding: 20rpx 20rpx 0 20rpx;
       background-color: #ffffff;
       .item {
         display: flex;
         align-items: center;
-        .image-top {
-          width: 60rpx;
-          height: 60rpx;
+        padding: 20rpx 0rpx;
+        .icon {
+          width: 40rpx;
+          height: 40rpx;
           margin-right: 20rpx;
         }
-        .name-des {
+        .name-arrow {
           display: flex;
           align-items: center;
           width: 100%;
-          border-bottom: 1rpx solid #efefef;
-          padding: 20rpx 0rpx;
           .name {
-            font-size: 32rpx;
+            font-size: 30rpx;
             width: 100%;
           }
-          .image-arrow {
+          .arrow {
             width: 30rpx;
             height: 30rpx;
           }
         }
       }
     }
-    /*动效*/
+    .line {
+      border-bottom: 1rpx solid #cccccc;
+    }
     .loading-container {
       margin: 450rpx auto 0 auto;
       display: block;
@@ -150,67 +145,64 @@
     </block>
 
     <block wx:if="{{!isLoading}}">
-    <view class="my-container" bindtap="clickUserInfo">
-      <image class="image-user" src="{{userInfo.avatar}}"/>
-      <view class="name-des">
+      <view class="my-container" bindtap="clickUserInfo">
+        <image class="image-user" src="{{userInfo.avatar}}"/>
         <view class="name">{{userInfo.name}}</view>
         <block wx:if="{{userInfo.des}}">
           <view class="des">{{userInfo.des}}</view>
         </block>
         <block wx:else>
-          <view class="des">暂无</view>
+          <view class="des">暂无介绍</view>
         </block>
       </view>
-      <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
-    </view>
 
-    <view class="fans-container">
-      <view class="item" bindtap="clickStars">
-        <image class="image-top" src="https://images.charmingkamly.cn/system/star.png"/>
-        <view class="name-des">
-          <view class="name">关注</view>
-          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
+      <view class="fans-container">
+        <view class="item line" bindtap="clickStars">
+          <image class="icon" src="https://images.charmingkamly.cn/system/star.png"/>
+          <view class="name-arrow">
+            <view class="name">关注</view>
+            <image class="arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
+          </view>
+        </view>
+        <view class="item" bindtap="clickFans">
+          <image class="icon" src="https://images.charmingkamly.cn/system/fan.png"/>
+          <view class="name-arrow">
+            <view class="name">粉丝</view>
+            <image class="arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
+          </view>
         </view>
       </view>
-      <view class="item" bindtap="clickFans">
-        <image class="image-top" src="https://images.charmingkamly.cn/system/fan.png"/>
-        <view class="name-des">
-          <view class="name">粉丝</view>
-          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
-        </view>
-      </view>
-    </view>
 
-    <view class="setting-container">
-      <view class="item" bindtap="clickBrowses">
-        <image class="image-top" src="https://images.charmingkamly.cn/system/browse.png"/>
-        <view class="name-des">
-          <view class="name">最近浏览</view>
-          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
+      <view class="setting-container">
+        <view class="item line" bindtap="clickBrowses">
+          <image class="icon" src="https://images.charmingkamly.cn/system/browse.png"/>
+          <view class="name-arrow">
+            <view class="name">最近浏览</view>
+            <image class="arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
+          </view>
+        </view>
+        <view class="item line">
+          <image class="icon" src="https://images.charmingkamly.cn/system/light.png"/>
+          <view class="name-arrow">
+            <view class="name">夜间模式</view>
+            <switch checked/>
+          </view>
+        </view>
+        <view class="item line">
+          <image class="icon" src="https://images.charmingkamly.cn/system/unbind.png"/>
+          <view class="name-arrow">
+            <view class="name">解绑</view>
+            <image class="arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
+          </view>
+        </view>
+        <view class="item">
+          <image class="icon" src="https://images.charmingkamly.cn/system/tucao.png"/>
+          <view class="name-arrow">
+            <view class="name">用户反馈</view>
+            <image class="arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
+          </view>
         </view>
       </view>
-      <view class="item">
-        <image class="image-top" src="https://images.charmingkamly.cn/system/light.png"/>
-        <view class="name-des">
-          <view class="name">夜间模式</view>
-          <switch checked/>
-        </view>
-      </view>
-      <view class="item">
-        <image class="image-top" src="https://images.charmingkamly.cn/system/unbind.png"/>
-        <view class="name-des">
-          <view class="name">解绑</view>
-          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
-        </view>
-      </view>
-      <view class="item">
-        <image class="image-top" src="https://images.charmingkamly.cn/system/tucao.png"/>
-        <view class="name-des">
-          <view class="name">用户反馈</view>
-          <image class="image-arrow" src="https://images.charmingkamly.cn/system/arrow.png"/>
-        </view>
-      </view>
-    </view>
     </block>
   </view>
 </template>

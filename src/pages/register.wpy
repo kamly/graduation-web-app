@@ -19,6 +19,7 @@
     .input-container {
       margin-top: 284rpx;
       .input-placeholder{
+        font-weight: 200;
         font-size: 36rpx;
         color: #bdbdbd;
       }
