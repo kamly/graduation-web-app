@@ -94,7 +94,7 @@ export function apiFetchFanRedux(data) {
     dispatch(actions.fetchFanReq())
     const res = await userApi.fan(token, id)
     if (isSuccess(res.data)) {
-      dispatch(actions.fetchFanRcv({res}))
+      dispatch(actions.fetchFanRcv({res, id: id}))
     } else {
       dispatch(actions.fetchFanErr({res}))
     }

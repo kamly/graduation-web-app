@@ -3,66 +3,49 @@
 */
 
 <style lang="less" rel="stylesheet/less">
-  page {
-    background-color: #ffffff;
-    color: #0e0e0e;
-  }
   .index-container {
-    /*单个*/
     .item{
-      padding: 20rpx;
-      border-bottom: 5rpx solid #ebebeb;
-      .auth {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20rpx;
-        .left {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          .image {
-            width: 70rpx;
-            height: 70rpx;
-            border-radius: 50%;
-          }
-          .name-des {
-            margin-left: 20rpx;
-            .name {
-              font-size: 30rpx;
-              font-weight: 500;
-              color: #2f2f2f;
-            }
-            .des {
-              font-size: 30rpx;
-              color: #4c4c4c;
-              max-width: 420rpx;
-              word-break: keep-all;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-        }
-        .right {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 10rpx 20rpx;
-          border-radius: 10rpx;
-          background-color: #ebebeb;
-          .text {
-            font-size: 26rpx;
-            color: #979797;
-          }
-        }
+      padding: 20rpx 24rpx;
+      display: flex;
+      border-top: 5rpx solid #ebebeb;
+      background-color: #ffffff;
+      .image {
+        margin-top: 8rpx;
+        margin-right: 20rpx;
+        height: 80rpx;
+        border-radius: 50%;
       }
-      .content {
-        white-space:pre-line;
-        word-wrap: break-word;
+      .right {
+        display: flex;
+        width: 100%;
+        .name-des-fans {
+          padding-top: 5rpx;
+          width: 465rpx;
+          .name {
+            font-size: 38rpx;
+            color: #1a1a1a;
+            margin-bottom: 8rpx;
+          }
+          .des {
+            font-size: 24rpx;
+            color: #444444;
+            margin-bottom: 8rpx;
+          }
+          .fans {
+            font-size: 24rpx;
+            color: #999999;
+            margin-bottom: 8rpx;
+          }
+        }
+        .fan-unfan {
+          padding-top: 10rpx;
+          .icon {
+            width: 140rpx;
+            height: 60rpx;
+          }
+        }
       }
     }
-    /*动效*/
     .loading-container {
       margin: 450rpx auto 0 auto;
       display: block;
@@ -127,25 +110,28 @@
     <block wx:if="{{!isLoading}}">
     <blcok wx:for="{{stars}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
       <view class="item" bindtap="clickUser" data-id="{{item.user_info.id}}">
-        <view class="auth">
-          <view class="left">
-            <image class="image" src="{{item.user_info.avatar}}"/>
-            <view class="name-des">
-              <view class="name">{{item.user_info.name}}</view>
+        <image class="image" src="{{item.user_info.avatar}}"/>
+        <view class="right">
+          <view class="name-des-fans">
+            <view class="name">{{item.user_info.name}}</view>
+            <block wx:if="{{userInfo.des}}">
               <view class="des">{{item.user_info.des}}</view>
-            </view>
+            </block>
+            <block wx:else>
+              <view class="des">暂无介绍</view>
+            </block>
+            <view class="fans">{{item.user_fans}} 关注</view>
           </view>
-          <view class="right">
-            <view class="text">已关注</view>
+
+          <view class="fan-unfan">
+            <block wx:if="{{item.hasStar}}">
+              <image class="icon" src="https://images.charmingkamly.cn/system/stared.png" mode="aspectFit"/>
+            </block>
+            <block wx:else>
+              <image class="icon" src="https://images.charmingkamly.cn/system/staring.png" mode="aspectFit"/>
+            </block>
           </view>
         </view>
-        <block wx:if="{{item.user_post}}">
-          <!--最新的一篇标题-->
-          <view class="content">
-            <view>最新文章:</view>
-            <text>{{item.user_post.title}}</text>
-          </view>
-        </block>
       </view>
     </blcok>
     </block>

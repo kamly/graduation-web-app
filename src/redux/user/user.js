@@ -35,6 +35,18 @@ export const user = handleActions({
   FETCH_FAN_RCV: (state, action) => {
     // 发生错误，wpy页面进行处理，这里看后续需求添加内容
     let nextState = {...state}
+    let id = parseInt(action.payload.id)
+    // userFans
+    let fans = nextState.userFans
+    var i = 0
+    for (; i < fans.length; i++) {
+      if (fans[i].fan_id === id) {
+        fans[i].hasStar = true
+        break
+      }
+    }
+    nextState.userFans = fans
+
     nextState.isFetching = false
     return nextState
   },
@@ -55,18 +67,30 @@ export const user = handleActions({
       }
   }),
   FETCH_UN_FAN_RCV: (state, action) => {
-    // 发生错误，wpy页面进行处理，这里看后续需求添加内容
     let nextState = {...state}
     let id = parseInt(action.payload.id)
-    let arr = nextState.userStars
-    var i = 0;
-    for (; i < arr.length; i++) {
-      if (arr[i].star_id === id) {
-        arr.splice(i, 1);
-        break;
+    // userStars
+    let star = nextState.userStars
+    var i = 0
+    for (; i < star.length; i++) {
+      if (star[i].star_id === id) {
+        star.splice(i, 1)
+        break
       }
     }
-    nextState.userStars = arr
+    nextState.userStars = star
+
+    // userFans
+    let fans = nextState.userFans
+    var i = 0
+    for (; i < fans.length; i++) {
+      if (fans[i].fan_id === id) {
+        fans[i].hasStar = false
+        break
+      }
+    }
+    nextState.userFans = fans
+
     nextState.isFetching = false
     return nextState
   },
