@@ -53,8 +53,8 @@
         .name-des {
           margin-left: 20rpx;
           .name {
-            font-size: 30rpx;
-            font-weight: 500;
+            font-size: 36rpx;
+            font-weight: 600;
             color: #2f2f2f;
             max-width: 440rpx;
             word-break: keep-all;
@@ -63,8 +63,8 @@
             text-overflow: ellipsis;
           }
           .des {
-            font-size: 30rpx;
-            color: #4c4c4c;
+            font-size: 24rpx;
+            color: #999999;
             max-width: 440rpx;
             word-break: keep-all;
             white-space: nowrap;
@@ -73,23 +73,24 @@
           }
         }
       }
-      .right {
+      .right .fan{
+        .image {
+          width: 140rpx;
+          height: 60rpx;
+        }
+      }
+      .right .edit{
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 10rpx 20rpx;
         border-radius: 10rpx;
-        border: 1px solid #70a2f8;
-        .image {
-          width: 30rpx;
-          height: 30rpx;
-          margin-right: 5rpx;
-        }
+        border: 2px solid #70a2f8;
         .text {
           font-size: 26rpx;
           color: #70a2f8;
         }
-        .fan, .edit {
+        .edit {
           display: flex;
           justify-content: center;
           align-items: center;
@@ -98,8 +99,8 @@
     }
     /*内容*/
     .post-container {
-      margin-top: 5rpx;
-      padding: 10rpx 20rpx 100rpx 20rpx;
+      margin-top: 50rpx;
+      padding: 0rpx 20rpx 100rpx 20rpx;
       .text {
         white-space:pre-line;
         word-wrap: break-word;
@@ -111,6 +112,12 @@
           height: 130rpx;
           margin-right: 12rpx;
         }
+      }
+      .date {
+        margin-top: 60rpx;
+        text-align: right;
+        font-size: 30rpx;
+        color: #bfbfbf;
       }
     }
     /*顶部栏*/
@@ -126,6 +133,7 @@
       justify-content: space-around;
       align-items: center;
       .item {
+        margin-top: 8rpx;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -237,7 +245,6 @@
     .share-action-sheet .share-item:after {
       content: normal;
     }
-
     .shareButtonHover{
       background: #185edf !important;
     }
@@ -274,7 +281,6 @@
         visibility: visible;
       }
     }
-
     @keyframes fadeOut {
       from {
         opacity: 1;
@@ -313,7 +319,7 @@
                 <view class="des">{{showPost.user.des}}</view>
               </block>
               <block wx:else>
-                <view class="des">暂无</view>
+                <view class="des">暂无介绍</view>
               </block>
             </view>
           </view>
@@ -325,12 +331,10 @@
             </view>
             <view wx:else  class="fan" bindtap="clickFan">
               <block wx:if="{{showPost.isFan}}">
-                <image class="image" src="https://images.charmingkamly.cn/system/add.png"/>
-                <view class="text">取消关注</view>
+                <image class="image" src="https://images.charmingkamly.cn/system/stared.png"/>
               </block>
               <block wx:else>
-                <image class="image" src="https://images.charmingkamly.cn/system/add.png"/>
-                <view class="text">关注</view>
+                <image class="image" src="https://images.charmingkamly.cn/system/staring.png"/>
               </block>
             </view>
           </view>
@@ -343,6 +347,9 @@
             <image src="{{item}}"/>
             </block>
           </view>
+          <view class="date">
+            发布于 {{showPost.created_at}}
+          </view>
         </view>
 
         <view class="button-container">
@@ -353,7 +360,7 @@
           <view class="item" bindtap="clickZan">
             <block wx:if="{{showPost.isZan}}">
               <image class="image" src="https://images.charmingkamly.cn/system/like.png"/>
-              <view class="text">取消点赞·{{showPost.zans_count}}</view>
+              <view class="text">点赞·{{showPost.zans_count}}</view>
             </block>
             <block wx:else>
               <image class="image" src="https://images.charmingkamly.cn/system/like.png"/>
@@ -432,7 +439,6 @@
         })
       }
 
-
       // 下拉 刷新
       async onPullDownRefresh() {
         const that = this
@@ -470,6 +476,8 @@
         if (isSuccess) {
           const state = store.getState()
           that.showPost = state.post.showPost
+          const timeArray = that.showPost.created_at.split(' ')
+          that.showPost.created_at = timeArray[0]
         }
         that.$apply()
       }

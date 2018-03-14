@@ -53,7 +53,7 @@
         .name-des {
           margin-left: 20rpx;
           .name {
-            font-size: 30rpx;
+            font-size: 36rpx;
             font-weight: 500;
             color: #2f2f2f;
             max-width: 440rpx;
@@ -63,8 +63,8 @@
             text-overflow: ellipsis;
           }
           .des {
-            font-size: 30rpx;
-            color: #4c4c4c;
+            font-size: 24rpx;
+            color: #999999;
             max-width: 440rpx;
             word-break: keep-all;
             white-space: nowrap;
@@ -76,8 +76,8 @@
     }
     /*内容*/
     .post-container {
-      margin-top: 5rpx;
-      padding: 10rpx 20rpx 100rpx 20rpx;
+      margin-top: 50rpx;
+      padding: 0rpx 20rpx 100rpx 20rpx;
       .text {
         white-space:pre-line;
         word-wrap: break-word;
@@ -89,6 +89,12 @@
           height: 130rpx;
           margin-right: 12rpx;
         }
+      }
+      .date {
+        margin-top: 60rpx;
+        text-align: right;
+        font-size: 30rpx;
+        color: #bfbfbf;
       }
     }
     /*loading*/
@@ -160,25 +166,28 @@
 
       <view class="auth-container">
         <view class="left">
-          <image class="image" src="../assets/images/test.jpg"/>
+          <image class="image" src="{{showPostShare.user.avatar}}"/>
           <view class="name-des">
             <view class="name">{{showPostShare.user.name}}</view>
-            <block wx:if="1">
+            <block wx:if="{{showPostShare.user.des}}">
               <view class="des">{{showPostShare.user.des}}</view>
             </block>
             <block wx:else>
-              <view class="des">暂无</view>
+              <view class="des">暂无介绍</view>
             </block>
           </view>
         </view>
       </view>
 
       <view class="post-container">
-        <rich-text class="text" nodes="{{showPostShare.html}}"></rich-text>
+        <rich-text class="text" nodes="{{showPostShare.html2Array}}"></rich-text>
         <view class="images">
           <block wx:for="{{showPostShare.images}}" wx:key="unique" wx:for-index="id" wx:for-item="item" class="images">
             <image src="{{item}}"/>
           </block>
+        </view>
+        <view class="date">
+          发布于 {{showPostShare.created_at}}
         </view>
       </view>
 
@@ -225,6 +234,8 @@
       if (isSuccess) {
         const state = store.getState()
         that.showPostShare = state.post.showPostShare
+        const timeArray = that.showPostShare.created_at.split(' ')
+        that.showPostShare.created_at = timeArray[0]
       }
       that.$apply()
     }
