@@ -11,9 +11,6 @@
     padding: 20rpx;
     .top-container {
       display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      border-bottom: 1rpx solid #e5e5e5;
       .header {
         display: flex;
         flex-direction: column;
@@ -21,23 +18,29 @@
         align-items: center;
         margin: 20rpx;
         .image {
-          width: 100rpx;
-          height: 100rpx;
+          width: 150rpx;
+          height: 150rpx;
           border-radius: 50%;
         }
         .text {
-          margin-top: 10rpx;
-          font-size: 28rpx;
-          color: #a3a3a3;
+          margin-top: 20rpx;
+          font-size: 24rpx;
+          color: #bfbfbf;
           text-align: center;
         }
       }
       .text {
         width: 100%;
-        .name, .des {
-          font-size: 28rpx;
-          color: #a3a3a3;
-          padding: 10rpx;
+        .name {
+          font-size: 36rpx;
+          color: #252525;
+          padding: 20rpx;
+          border-bottom: 1rpx solid #e5e5e5;
+        }
+        .des {
+          font-size: 24rpx;
+          color: #a6a6a6;
+          padding: 20rpx;
           border-bottom: 1rpx solid #e5e5e5;
         }
       }
@@ -47,13 +50,13 @@
       padding-bottom: 20rpx;
       border-bottom: 1rpx solid #e5e5e5;
       font-size: 28rpx;
+      color: #666666;
       .sex-title {
         padding-right: 20rpx;
         border-right: 1rpx solid #e5e5e5;
       }
       .sex-select {
         padding-left: 20rpx;
-        color: #a3a3a3;
       }
     }
     .remark-container {
@@ -61,13 +64,11 @@
       .textarea {
         font-size: 28rpx;
         color: #a3a3a3;
-        width: 100%;
-        height: 300rpx;
       }
     }
     .button-container {
       position: fixed;
-      bottom: 0;
+      bottom: 15rpx;
       width: 95%;
       display: flex;
       justify-content: center;

@@ -12,7 +12,7 @@
       background-color: #ffffff;
       .input-title, .input-des {
         padding: 10rpx 0;
-        border-bottom: 2rpx solid #808087;
+        border-bottom: 2rpx solid #d9d9d9;
       }
       .input-des {
         width: 100%;
@@ -130,7 +130,7 @@
             <image src="{{item}}" data-id="{{id}}" bindtap="clickDelImage" />
           </block>
           <image src="https://images.charmingkamly.cn/system/add_image.png" bindtap="clickAddImage"
-                 wx:if="{{!limitImage}}" />
+                 wx:if="{{!limitImage}}"/>
         </view>
       </view>
       <view class="button-container">

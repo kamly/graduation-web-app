@@ -6,35 +6,24 @@
   .index-container {
     /*单个*/
     .item {
+      margin-top: 20rpx;
+      padding: 30rpx 25rpx;
       display: flex;
-      justify-content: space-around;
-      align-items: center;
+      flex-direction: column;
+      justify-content: center;
       background-color: #ffffff;
-      border-bottom: 1px solid #eeeeee;
-      padding: 10rpx;
-      .header {
-        width: 60rpx;
-        height: 60rpx;
-        border-radius: 50%;
+      .title {
+        font-size: 36rpx;
+        font-weight: 600;
       }
-      .text {
-        .title, .article {
-          width: 620rpx;
-          word-break: keep-all;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .title {
-          margin-top: 15rpx;
-          font-size: 28rpx;
-          font-weight: 600;
-        }
-        .article {
-          margin-top: 10rpx;
-          font-size: 28rpx;
-          color: #656565;
-        }
+      .des {
+        font-size: 26rpx;
+        color: #959595;
+      }
+      .count-time {
+        margin-top: 15rpx;
+        font-size: 26rpx;
+        color: #dadada;
       }
     }
     /*动效*/
@@ -102,16 +91,16 @@
     <block wx:if="{{!isLoading}}">
       <blcok wx:for="{{browse}}" wx:key="unique" wx:key="unique" wx:for-index="id" wx:for-item="item" >
         <view class="item" bindtap="clickPost" data-id="{{item.post_id}}">
-          <image class="header" src="{{item.post_info.user.avatar}}"/>
-          <view class="text">
-            <view class="title">{{item.post_info.title}}</view>
-            <block wx:if="{{item.des}}">
-              <view class="article">{{item.post_info.des}}</view>
-            </block>
-            <block wx:else>
-              <view class="article">暂无描述</view>
-            </block>
-          </view>
+
+          <view class="title">{{item.post_info.title}}</view>
+          <block wx:if="{{item.des}}">
+            <view class="des">{{item.post_info.des}}</view>
+          </block>
+          <block wx:else>
+            <view class="des">暂无描述</view>
+          </block>
+          <view class="count-time">{{item.post_info.zans_count}} 赞 · {{item.post_info.comments_count}} 评论 · {{item.post_info.time}}</view>
+
         </view>
       </blcok>
     </block>
