@@ -26,11 +26,6 @@
         padding: 8rpx 0;
         background-color: #ebebeb;
         border-radius: 10rpx;
-        .search-image {
-          width: 30rpx;
-          height: 30rpx;
-          margin-right: 20rpx;
-        }
         .search-text {
           font-size: 28rpx;
           color: #969696;
@@ -42,17 +37,12 @@
           text-align: center;
         }
       }
-      /*发表*/
+      /*搜索文字*/
       .post {
         width: 15%;
         display: flex;
         justify-content: center;
         align-items: center;
-        .post-image {
-          width: 30rpx;
-          height: 30rpx;
-          margin-right: 10rpx;
-        }
         .post-text {
           font-size: 28rpx;
           color: #2984f3;
@@ -65,8 +55,9 @@
       margin-top: 15rpx;
       padding: 15rpx;
       .title {
-        color: black;
+        color: #1a1a1a;
         font-weight: 800;
+        font-size: 36rpx;
         margin-bottom: 10rpx;
         padding-left: 20rpx;
       }
@@ -78,9 +69,9 @@
           margin: 10rpx;
           padding: 10rpx 30rpx;
           border-radius: 40rpx;
-          font-size: 36rpx;
+          font-size: 32rpx;
           font-weight: 400;
-          color: #5d5d5d;
+          color: #4d4d4d;
           background-color: #f6f6f6;
           .item-inner {
             display: flex;
@@ -135,13 +126,12 @@
             height: 30rpx;
           }
         }
-        .title, .content, {
+        .title, .des {
           word-break: keep-all;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
-
         .title {
           margin-top: 15rpx;
           font-size: 36rpx;
@@ -151,7 +141,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        .content {
+        .des {
           margin-top: 10rpx;
           color: #656565;
           word-break: keep-all;
@@ -227,7 +217,6 @@
         <input class="search-text" placeholder="请输入搜索内容" value="{{search}}" bindinput="inputSearch"/>
       </view>
       <view class="post" bindtap="clickSearch">
-        <image class="post-image" src="https://images.charmingkamly.cn/system/search.png"></image>
         <view class="post-text">搜索</view>
       </view>
     </view>
@@ -277,10 +266,15 @@
                   <image class="image" src="{{item.user_info.avatar}}"/>
                   <view class="name-time">{{item.user_info.name}} · {{item.time}}</view>
                 </view>
-                <image class="more" src="../assets/images/more.svg"/>
+                <image class="more" src="https://images.charmingkamly.cn/system/more.png"/>
               </view>
               <view class="title">{{item.title}}</view>
-              <view class="content">{{item.content}}</view>
+              <block wx:if="{{item.des}}">
+                <view class="des">{{item.main_post.des}}</view>
+              </block>
+              <block wx:else>
+                <view class="des">暂无描述</view>
+              </block>
             </view>
           </block>
 
@@ -292,19 +286,23 @@
                   <image class="image" src="{{item.user_info.avatar}}"/>
                   <view class="name-time">{{item.user_info.name}} · {{item.time}}</view>
                 </view>
-                <image class="more" src="../assets/images/more.svg"/>
+                <image class="more" src="https://images.charmingkamly.cn/system/more.png"/>
               </view>
               <view class="content">{{item.content}}</view>
               <view class="main-post">
                 <view class="top">
                   <view class="auth">
-                    <image class="image" src="{{item.user_info.avatar}}"/>
-                    <view class="name-time">{{item.user_info.name}} · {{item.time}}</view>
+                    <image class="image" src="{{item.main_post.user.avatar}}"/>
+                    <view class="name-time">{{item.main_post.user.name}} · {{item.main_post.time}}</view>
                   </view>
-                  <image class="more" src="../assets/images/more.svg"/>
                 </view>
                 <view class="title">{{item.main_post.title}}</view>
-                <view class="content">{{item.main_post.content}}</view>
+                <block wx:if="{{item.des}}">
+                  <view class="des">{{item.main_post.des}}</view>
+                </block>
+                <block wx:else>
+                  <view class="des">暂无描述</view>
+                </block>
               </view>
             </view>
           </block>
@@ -400,6 +398,10 @@
       // 点击搜索
       async clickSearch () {
         const that = this
+        if (this.search === '') {
+          util.wxToast.showModal('错误提示', '搜索内容不能为空', false)
+          return
+        }
         await that.searchInfo(that.page, that.size)
       },
       // 搜索内容
