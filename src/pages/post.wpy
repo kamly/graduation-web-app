@@ -359,11 +359,11 @@
           </view>
           <view class="item" bindtap="clickZan">
             <block wx:if="{{showPost.isZan}}">
-              <image class="image" src="https://images.charmingkamly.cn/system/like.png"/>
+              <image class="image" src="https://images.charmingkamly.cn/system/liked.png"/>
               <view class="text">点赞·{{showPost.zans_count}}</view>
             </block>
             <block wx:else>
-              <image class="image" src="https://images.charmingkamly.cn/system/like.png"/>
+              <image class="image" src="https://images.charmingkamly.cn/system/likeing.png"/>
               <view class="text">点赞·{{showPost.zans_count}}</view>
             </block>
           </view>

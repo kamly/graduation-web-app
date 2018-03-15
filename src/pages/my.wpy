@@ -226,7 +226,7 @@
                 <view class="item" bindtap="clickPost" data-id="{{item.post.id}}">
                   <view class="top">
                     <view class="auth">
-                      <image class="image" src="{{item.post_user.avatar}}"/>
+                      <image class="image" src="{{item.post.user.avatar}}"/>
                       <view class="name-time">{{item.post.time}}</view>
                     </view>
                     <image class="more" src="https://images.charmingkamly.cn/system/more.png"/>

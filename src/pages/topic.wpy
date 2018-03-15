@@ -25,7 +25,7 @@
       }
       .des {
         padding: 10rpx 10rpx 20rpx 10rpx;
-        color: #aeaeae;
+        color: #c1c1c1;
         font-size: 24rpx;
         border-bottom: 1rpx solid #e3e3e3;
       }
@@ -44,7 +44,7 @@
         }
         .text {
           font-size: 28rpx;
-          color: #626262;
+          color: #c1c1c1;
         }
       }
     }
@@ -54,44 +54,42 @@
         margin-top: 10rpx;
         padding: 20rpx;
         background-color: #ffffff;
-        font-size: 26rpx;
         .top {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          border-bottom: 1rpx solid #c3c3c3;
+          padding-bottom: 15rpx;
           .auth {
             display: flex;
             justify-content: center;
             align-items: center;
-            .image {
-              width: 40rpx;
-              height: 40rpx;
+            .avatar {
+              width: 50rpx;
+              height: 50rpx;
               border-radius: 50%;
             }
-            .name-time {
+            .name {
               margin-left: 20rpx;
               color: #a7a7a7;
-              font-weight: 200;
+              font-size: 28rpx;
             }
           }
-          .more {
-            width: 30rpx;
-            height: 30rpx;
+          .time {
+            margin-left: 20rpx;
+            color: #a7a7a7;
+            font-size: 28rpx;
           }
         }
         .title {
           margin-top: 15rpx;
-          font-size: 36rpx;
+          font-size: 42rpx;
           font-weight: 600;
         }
-        .article {
+        .des {
           margin-top: 10rpx;
           color: #656565;
-        }
-        .bottom {
-          margin-top: 10rpx;
-          font-weight: 400;
-          color: #a7a7a7;
+          font-size: 28rpx;
         }
       }
     }
@@ -161,11 +159,11 @@
       <!--顶部-->
       <view class="top-container">
         <view class="top">
-          <block wx:if="{{showTopic.images}}">
-            <image class="image" src="{{showTopic.images.url}}" />
+          <block wx:if="{{showTopic.image}}">
+            <image class="image" src="{{showTopic.image}}" />
           </block>
           <block wx:else>
-            <image class="image" src="../assets/images/test.jpg"/>
+            <image class="image" src="https://images.charmingkamly.cn/system/background.png"/>
           </block>
 
           <view class="title">{{showTopic.name}}</view>
@@ -200,10 +198,10 @@
           <view class="item" bindtap="clickPost" data-id="{{item.id}}">
             <view class="top">
               <view class="auth">
-                <image class="image" src="{{item.user.avatar}}"/>
-                <view class="name-time">{{item.user.name}} · {{item.time}}</view>
+                <image class="avatar" src="{{item.user.avatar}}"/>
+                <view class="name">{{item.user.name}}</view>
               </view>
-              <image class="more" src="../assets/images/more.svg"/>
+              <view class="time">{{item.time}}</view>
             </view>
             <view class="title">{{item.title}}</view>
             <block wx:if="{{item.des}}">
@@ -212,9 +210,6 @@
             <block wx:else>
               <view class="des">暂无描述</view>
             </block>
-            <view class="bottom">
-              <view class="des">{{item.zans_count}} 赞 · {{item.comments_count}} 评论 · 去看看</view>
-            </view>
           </view>
         </blcok>
       </view>
