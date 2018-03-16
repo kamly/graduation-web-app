@@ -21,7 +21,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 80%;
+        width: 85%;
         height: 36rpx;
         padding: 8rpx 0;
         background-color: #ebebeb;
@@ -38,12 +38,9 @@
         }
       }
       /*搜索文字*/
-      .post {
-        width: 15%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .post-text {
+      .cancel {
+        margin-left: 10rpx;
+        .cancel-text {
           font-size: 28rpx;
           color: #2984f3;
         }
@@ -214,10 +211,10 @@
     <!--搜索-->
     <view class="search-container">
       <view class="search">
-        <input class="search-text" placeholder="请输入搜索内容" value="{{search}}" bindinput="inputSearch"/>
+        <input class="search-text" placeholder="请输入搜索内容" value="{{search}}" bindinput="inputSearch" confirm-type="search" bindconfirm="clickSearch"/>
       </view>
-      <view class="post" bindtap="clickSearch">
-        <view class="post-text">搜索</view>
+      <view class="cancel" bindtap="clickCancel">
+        <view class="cancel-text">取消</view>
       </view>
     </view>
     <!--搜索-->
@@ -412,6 +409,10 @@
         if (this.search === '') {
           that.isSearch = false
         }
+      },
+      // 点击取消
+      async clickCancel () {
+        await util.wxGoTo.switchTab(`./index`)
       },
       // 跳转文章 post
       async clickPost (e) {
