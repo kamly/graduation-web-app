@@ -46,54 +46,7 @@
         }
       }
     }
-    .loading-container {
-      margin: 450rpx auto 0 auto;
-      display: block;
-      width: 120rpx;
-      height: 120rpx;
-      position: relative;
-      text-align: center;
 
-      -webkit-animation: rotate 2.0s infinite linear;
-      animation: rotate 2.0s infinite linear;
-      .dot1, .dot2 {
-        width: 60%;
-        height: 60%;
-        display: inline-block;
-        position: absolute;
-        top: 0;
-        background-color: #2d80ff;
-        border-radius: 100%;
-
-        -webkit-animation: bounce 2.0s infinite ease-in-out;
-        animation: bounce 2.0s infinite ease-in-out;
-      }
-
-      .dot2 {
-        top: auto;
-        bottom: 0px;
-        -webkit-animation-delay: -1.0s;
-        animation-delay: -1.0s;
-      }
-
-      @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
-      @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
-
-      @-webkit-keyframes bounce {
-        0%, 100% { -webkit-transform: scale(0.0) }
-        50% { -webkit-transform: scale(1.0) }
-      }
-
-      @keyframes bounce {
-        0%, 100% {
-          transform: scale(0.0);
-          -webkit-transform: scale(0.0);
-        } 50% {
-            transform: scale(1.0);
-            -webkit-transform: scale(1.0);
-          }
-      }
-    }
   }
 </style>
 
@@ -101,10 +54,7 @@
   <view class="index-container">
 
     <block wx:if="{{isLoading}}">
-      <div class="loading-container">
-        <div class="dot1"></div>
-        <div class="dot2"></div>
-      </div>
+      <loadingComponent :loadingContainer.sync="loadingContainer"></loadingComponent>
     </block>
 
     <block wx:if="{{!isLoading}}">
@@ -144,6 +94,7 @@
   import {apiFetchGetFansRedux} from '../redux/user/actions'
   import store from '../store'
   import {connect, setStore} from 'wepy-redux'
+  import loadingComponent from '../components/loadingComponent'
 
   setStore(store)
   @connect({
@@ -151,6 +102,9 @@
   })
 
   export default class Star extends wepy.page {
+    components = {
+      loadingComponent
+    }
     config = {
       navigationBarTitleText: '粉丝',
       navigationBarBackgroundColor: '#ffffff',
@@ -159,12 +113,15 @@
     }
     data = {
       isLoading: true, // 加载
+      loadingContainer: 0, // loading的效果
       fans: []
     }
 
     // 加载
     async onLoad() {
       const that = this
+      // 随机loading动画效果
+      that.loadingContainer = util.common.randomLoadingContainer()
       await that.getFans()
       // 关闭loading动画
       that.isLoading = false

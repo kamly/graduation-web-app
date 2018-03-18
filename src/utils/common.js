@@ -87,12 +87,18 @@ function checkTokenPromise() {
   })
 }
 
+// 随机loading样式
+function randomLoadingContainer() {
+  return random([0, 3])
+}
+
 
 module.exports = {
   isEmpty,
   isSuccess,
   sleepPromise,
   random,
+  randomLoadingContainer,
   isSuccessPromise,
   checkTokenPromise,
 }
