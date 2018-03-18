@@ -274,6 +274,14 @@
       }
     }
 
+    /*到达底部*/
+    .reach-bottom {
+      margin-top: 20rpx;
+      text-align: center;
+      color: #919191;
+      font-size: 24rpx;
+    }
+
     /*loading动画效果*/
     .loading-container-0 {
         margin: 450rpx auto 0 auto;
@@ -504,7 +512,9 @@
           <!--动态内容-->
 
           <blcok wx:if="{{indexPostEnd}}">
-            到底部啦啦
+            <view class="reach-bottom">
+              ----到底部啦啦----
+            </view>
           </blcok>
 
         </view>
@@ -530,7 +540,9 @@
             </view>
           </blcok>
           <blcok wx:if="{{indexCommentEnd}}">
-            到底部啦啦
+            <view class="reach-bottom">
+              ----到底部啦啦----
+            </view>
           </blcok>
         </view>
       </block>
@@ -572,7 +584,9 @@
             </view>
           </blcok>
           <blcok wx:if="{{indexTopicEnd}}">
-            到底部啦啦
+            <view class="reach-bottom">
+              ----到底部啦啦----
+            </view>
           </blcok>
         </view>
       </block>
