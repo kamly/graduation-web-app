@@ -120,7 +120,7 @@
         color: #bfbfbf;
       }
     }
-    /*顶部栏*/
+    /*底部栏*/
     .button-container {
       position: fixed;
       bottom: 0;
@@ -148,8 +148,8 @@
         }
       }
     }
-
-    .share-wrapper{
+    /*分享遮罩层*/
+    .share-wrapper {
       position: fixed;
       top:0;
       right:0;
@@ -159,16 +159,39 @@
       opacity: 0;
       z-index: 10000000000;
       visibility: hidden;
+      &.active {
+        animation: fadeIn 0.3s;
+        animation-fill-mode: forwards;
+      }
+      &.fade{
+        animation: fadeOut 0.3s;
+        animation-fill-mode: forwards;
+      }
+      /*进场*/
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          visibility: hidden;
+        }
+        to {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+      /*退场*/
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+          visibility: visible;
+        }
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
     }
-    .share-wrapper.active{
-      animation: fadeIn 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .share-wrapper.fade{
-      animation: fadeOut 0.3s;
-      animation-fill-mode: forwards;
-    }
-    .share-action-sheet{
+    /*分享*/
+    .share-list {
       position: fixed;
       z-index: 10000000001;
       left:30rpx;
@@ -181,65 +204,19 @@
       -webkit-transform: translateY(130%);
       transition: transform 0.3s ease;
       box-shadow: 0 0 20rpx rgba(0,0,0,0.05);
-    }
-    .share-action-sheet.active{
-      transform: translateY(0);
-    }
-    .share-action-sheet .share-item{
-      border: none;
-      border-radius:0;
-      margin-bottom: 1px;
-      height:100rpx;
-      line-height:100rpx;
-      font-size:32rpx;
-    }
-    .share-action-sheet .share-item:after {
-      content: normal;
-    }
-    .shareButtonHover{
-      background: #185edf !important;
-    }
-    .shareButton{
-      position: absolute;
-      top:50rpx;
-      right: 40rpx;
-      color: transparent;
-      background: #256df2;
-      border-radius:80rpx;
-      width: 80rpx;
-      height:80rpx;
-
-      border: none;
-      image{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        width: 35rpx;
-        height: 35rpx;
+      &.active {
+        transform: translateY(0);
       }
-      &:after{
+      .share-item {
+        border: none;
+        border-radius:0;
+        margin-bottom: 1px;
+        height:100rpx;
+        line-height:100rpx;
+        font-size:32rpx;
+      }
+      .share-item:after {
         content: normal;
-      }
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        visibility: hidden;
-      }
-      to {
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-    @keyframes fadeOut {
-      from {
-        opacity: 1;
-        visibility: visible;
-      }
-      to {
-        opacity: 0;
-        visibility: hidden;
       }
     }
   }
@@ -328,7 +305,7 @@
 
 
       <view class="share-wrapper {{showShareActionSheet?'active':''}} {{fadeOutWrapper?'fade':''}}" bindtap="hideShareActionSheet"></view>
-      <view class="share-action-sheet {{showShareActionSheet?'active':''}}">
+      <view class="share-list {{showShareActionSheet?'active':''}}">
         <button class="share-item" open-type="share" bindtap="hideShareActionSheet">转发</button>
         <button class="share-item" bindtap="handleMomentsShareTap">生成朋友圈分享图</button>
         <button class="share-item" bindtap="handleSaveQRCodeTap">生成二维码</button>
