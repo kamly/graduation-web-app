@@ -74,5 +74,18 @@
     }
 
     globalData = {}
+
+    onLaunch(opt) {
+      // 小卡片转发进入
+      if (opt.scene === '1044') {
+        // TODO 优化
+        wx.getShareInfo({
+          shareTicket: opt.shareTicket,
+          success: function(res) {
+            console.log(res)
+          }
+        })
+      }
+    }
   }
 </script>

@@ -80,7 +80,8 @@ function canvasToTempFilePathPromise(canvasId) {
   })
 }
 
-function showShareMenuPromise(canvasId) {
+// 允许转发时是否携带 shareTicket
+function showShareMenuPromise() {
   return new Promise(function (resolve, reject) {
     wx.showShareMenu({
       withShareTicket: true

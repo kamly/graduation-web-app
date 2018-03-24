@@ -306,7 +306,7 @@
 
       <view class="share-wrapper {{showShareActionSheet?'active':''}} {{fadeOutWrapper?'fade':''}}" bindtap="hideShareActionSheet"></view>
       <view class="share-list {{showShareActionSheet?'active':''}}">
-        <button class="share-item" open-type="share" bindtap="hideShareActionSheet">转发</button>
+        <button class="share-item" open-type="share">转发</button>
         <button class="share-item" bindtap="handleMomentsShareTap">生成朋友圈分享图</button>
         <button class="share-item" bindtap="handleSaveQRCodeTap">生成二维码</button>
       </view>
@@ -354,22 +354,22 @@
         loadingContainer: 0 // loading的效果
       }
 
+      // 加载
       async onLoad(e) {
         const that = this
         // 随机loading动画效果
         that.loadingContainer = util.common.randomLoadingContainer()
         that.id = e.id
         await that.getShowPost()
-        util.wxGetInfo.showShareMenuPromise()
+        util.wxGetInfo.showShareMenuPromise() // 允许转发时是否携带 shareTicket
         // 关闭loading动画
         that.isLoading = false
         that.$apply()
       }
 
+      // 显示
       onShow(e) {
-        wx.showShareMenu({
-          withShareTicket: true
-        })
+        util.wxGetInfo.showShareMenuPromise() // 允许转发时是否携带 shareTicket
       }
 
       // 下拉 刷新
@@ -383,12 +383,25 @@
         wepy.stopPullDownRefresh()
       }
 
+      // 分享群/个人
       onShareAppMessage () {
+        const that = this
         return {
           title: '你好呀',
-          path: '/page/show?scene=1',
+          path: `/page/postShare?scene=${that.id}`,
           success: function(res) {
-            console.log(res)
+            var shareTickets = res.shareTickets
+            if (shareTickets.length === 0) {
+              return false
+            }
+            // TODO 优化
+            wx.getShareInfo({
+              shareTicket: shareTickets[0],
+              success: function(res) {
+                console.log(res)
+                util.wxToast.success(1000, '分享成功')
+              }
+            })
           },
           fail: function(res) {
             console.log(res)
@@ -462,7 +475,7 @@
           const that = this
           await util.wxGoTo.navigateTo(`./reply?id=${that.id}`)
         },
-        // 分享
+        // 分享二维码
         async clickShare () {
           const that = this
 //          const selectResult = await util.wxToast.showActionSheet(['生成二维码', '转发朋友圈'])
@@ -482,6 +495,7 @@
           that.fadeOutWarpper = true
         },
 
+        // 隐藏分享菜单栏
         async hideShareActionSheet() {
           const that = this
           that.showShareActionSheet = false
@@ -561,13 +575,13 @@
         }
       }
 
-      // 生成二维码 scene page
+      // 请求服务器生成二维码 scene page
       async createQrcodeDownloadAvatar (scene) {
         // 请求网络生成二维码，并且下载本地
         const that = this
         const res = await store.dispatch(apiFetchCreateQrcodebRedux({
           token: wepy.getStorageSync('token'),
-          scene: that.id,
+          scene: scene,
           page: 'pages/postShare/postShare',
           width: 430
         }))
