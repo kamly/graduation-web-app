@@ -307,8 +307,8 @@
       <view class="share-wrapper {{showShareActionSheet?'active':''}} {{fadeOutWrapper?'fade':''}}" bindtap="hideShareActionSheet"></view>
       <view class="share-list {{showShareActionSheet?'active':''}}">
         <button class="share-item" open-type="share">转发</button>
-        <button class="share-item" bindtap="handleMomentsShareTap">生成朋友圈分享图</button>
-        <button class="share-item" bindtap="handleSaveQRCodeTap">生成二维码</button>
+          <button class="share-item" bindtap="clickCreateQRCode">生成二维码</button>
+        <button class="share-item" bindtap="clickMomentsShare">生成朋友圈分享图</button>
       </view>
 
       <canvas canvas-id="QrcodeWithAvatarCanvas" style="width: 430px;height: 430px;position: absolute;left: -999999px;top: -999999px;" />
@@ -475,24 +475,27 @@
           const that = this
           await util.wxGoTo.navigateTo(`./reply?id=${that.id}`)
         },
-        // 分享二维码
+
+        // 点击分享按钮
         async clickShare () {
           const that = this
-//          const selectResult = await util.wxToast.showActionSheet(['生成二维码', '转发朋友圈'])
-//          if (selectResult === 0) {
-//            // 生成二维码+头像
-//            const qrcodeWithAvatar = await that.createQrcodeWithAvatar(that.id)
-//            util.wxGetInfo.previewImagePromise(qrcodeWithAvatar)
-//          } else if (selectResult === 1) {
-//            // 转发朋友圈
-//            const qrcodeWithAvatar = await that.createQrcodeWithAvatar(that.id)
-//            const momentShareImage = await that.createMomentShareImage(qrcodeWithAvatar)
-//            util.wxGetInfo.previewImagePromise(momentShareImage)
-//          } else {
-//            // 点击取消
-//          }
           that.showShareActionSheet = true
           that.fadeOutWarpper = true
+        },
+
+        // 生成二维码+头像
+        async clickCreateQRCode() {
+          const that = this
+          const qrcodeWithAvatar = await that.createQrcodeWithAvatar(that.id)
+          util.wxGetInfo.previewImagePromise(qrcodeWithAvatar)
+        },
+
+        // 转发朋友圈
+        async clickMomentsShare() {
+          // const that = this
+          // const qrcodeWithAvatar = await that.createQrcodeWithAvatar(that.id)
+          // const momentShareImage = await that.createMomentShareImage(qrcodeWithAvatar)
+          // util.wxGetInfo.previewImagePromise(momentShareImage)
         },
 
         // 隐藏分享菜单栏
