@@ -387,8 +387,8 @@
       onShareAppMessage () {
         const that = this
         return {
-          title: '你好呀',
-          path: `/page/postShare?scene=${that.id}`,
+          title: `${that.showPost.title}`,
+          path: `/pages/postShare?scene=${that.id}`,
           success: function(res) {
             var shareTickets = res.shareTickets
             if (shareTickets.length === 0) {
@@ -585,7 +585,7 @@
         const res = await store.dispatch(apiFetchCreateQrcodebRedux({
           token: wepy.getStorageSync('token'),
           scene: scene,
-          page: 'pages/postShare/postShare',
+          page: `/pages/postShare`,
           width: 430
         }))
 

@@ -17,8 +17,8 @@
     config = {
       pages: [
         'pages/index',
-        'pages/post',
         'pages/postShare',
+        'pages/post',
         'pages/reply',
         'pages/publish',
         'pages/more',
