@@ -49,8 +49,8 @@
       <view>Hello {{userInfoFromWeApp.gender == 1 ? 'Boy' : 'Girl' }} ！</view>
     </view>
     <view class="input-container">
-      <input class="input input-email" placeholder="邮箱" value="{{inputEmail}}" bindinput="inputEmail"/>
-      <input class="input input-password" placeholder="密码" value="{{inputPassword}}" bindinput="inputPassword"
+      <input class="input input-email" placeholder="邮箱" value="{{inputEmail}}" bindblur="inputEmail"/>
+      <input class="input input-password" placeholder="密码" value="{{inputPassword}}" bindblur="inputPassword"
              type="password"/>
     </view>
     <view class="bottom-container">
@@ -98,11 +98,15 @@
     methods = {
       // 获取输入
       async inputEmail (event) {
-        this.inputEmail = event.detail.value
+        const that = this
+        that.inputEmail = event.detail.value
+        that.$apply()
       },
       // 获取输入
       async inputPassword (event) {
-        this.inputPassword = event.detail.value
+        const that = this
+        that.inputPassword = event.detail.value
+        that.$apply()
       },
 
       // 点击绑定
