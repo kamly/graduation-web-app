@@ -69,10 +69,10 @@
     <block wx:if="{{!isLoading}}">
       <view class="input-container">
         <block wx:if="{{type == 'post'}}">
-          <input class="input-title" placeholder="请输入标题" value="{{title}}" bindinput="inputTitle"/>
-          <textarea class="input-des" placeholder="请输入描述" value="{{des}}" bindinput="inputDes"/>
+          <input class="input-title" placeholder="请输入标题" value="{{title}}" bindblur="inputTitle"/>
+          <textarea class="input-des" placeholder="请输入描述" value="{{des}}" bindblur="inputDes"/>
         </block>
-        <textarea class="input-article" show-confirm-bar placeholder="{{type == 'post' ? '请输入文章' : '请输入评论'}}" value="{{content}}" bindinput="inputArticle"/>
+        <textarea class="input-article" show-confirm-bar placeholder="{{type == 'post' ? '请输入文章' : '请输入评论'}}" value="{{content}}" bindblur="inputArticle"/>
         <view class="image">
           <block wx:for="{{images}}" wx:key="unique" wx:for-index="id" wx:for-item="item">
             <image src="{{item}}" data-id="{{id}}" bindtap="clickDelImage" />
