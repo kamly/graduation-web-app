@@ -10,6 +10,11 @@ export const actions = createActions({
   FETCH_BINDING_EMAIL_RCV: null,
   FETCH_BINDING_EMAIL_ERR: null,
 
+  // 解绑
+  FETCH_UNBINDING_EMAIL_REQ: null,
+  FETCH_UNBINDING_EMAIL_RCV: null,
+  FETCH_UNBINDING_EMAIL_ERR: null,
+
   // 关注
   FETCH_FAN_REQ: null,
   FETCH_FAN_RCV: null,
@@ -80,6 +85,24 @@ export function apiFetchBindingEmailRedux(data) {
       dispatch(actions.fetchBindingEmailRcv({res}))
     } else {
       dispatch(actions.fetchBindingEmailErr({res}))
+    }
+    return res
+  }
+}
+
+
+// 解绑 ok
+export function apiFetchUnbindingEmailRedux(data) {
+
+  const {token} = data;
+
+  return async function (dispatch) {
+    dispatch(actions.fetchUnbindingEmailReq())
+    const res = await userApi.unbindingEmail(token)
+    if (isSuccess(res.data)) {
+      dispatch(actions.fetchUnbindingEmailRcv({res}))
+    } else {
+      dispatch(actions.fetchUnbindingEmailErr({res}))
     }
     return res
   }

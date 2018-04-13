@@ -18,6 +18,7 @@ export default class wxToast {
     })
   }
 
+  // 二次确认
   static showModal(title, content, showCancel) {
     return new Promise(function (resolve, reject) {
       wx.showModal({
@@ -35,6 +36,7 @@ export default class wxToast {
     })
   }
 
+  // 菜单栏
   static showActionSheet(list) {
     return new Promise(function (resolve, reject) {
       wx.showActionSheet({

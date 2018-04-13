@@ -10,6 +10,13 @@ export default class API {
   }
 
   /**
+   * 解绑邮箱
+   */
+  static unbindingEmail(token) {
+    return wxNet.sendRequest(token, `${Config.HOST.ZD}/user/unbindingEmail`, 'POST', {})
+  }
+
+  /**
    * 关注
    */
   static fan(token, id) {

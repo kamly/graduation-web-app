@@ -16,7 +16,28 @@ export const user = handleActions({
     nextState.isFetching = false
     return nextState
   },
-  FETCH_FAN_ERR: (state, action) => {
+  FETCH_BINDING_ERR: (state, action) => {
+    // 发生错误，wpy页面进行处理，这里看后续需求添加内容
+    let nextState = {...state}
+    nextState.isFetching = false
+    return nextState
+  },
+
+  /*
+   * 解绑邮箱
+   */
+  FETCH_UNBINDING_EMAIL_REQ: (state, action) => ({
+    ...state, ...
+      {
+        isFetching: true,
+      }
+  }),
+  FETCH_UNBINDING_EMAIL_RCV: (state, action) => {
+    let nextState = {...state}
+    nextState.isFetching = false
+    return nextState
+  },
+  FETCH_UNBINDING_ERR: (state, action) => {
     // 发生错误，wpy页面进行处理，这里看后续需求添加内容
     let nextState = {...state}
     nextState.isFetching = false

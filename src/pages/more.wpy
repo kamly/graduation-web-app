@@ -130,18 +130,18 @@
             <image class="arrow" src="https://images.charmingkamly.cn/system/arrow.png" mode="aspectFit"/>
           </view>
         </view>
-        <view class="item line">
+        <!-- <view class="item line">
           <image class="icon" src="https://images.charmingkamly.cn/system/light.png" mode="aspectFit"/>
           <view class="name-arrow">
             <view class="name">夜间模式</view>
             <switch checked/>
           </view>
-        </view>
+        </view> -->
         <view class="item line">
           <image class="icon" src="https://images.charmingkamly.cn/system/unbind.png" mode="aspectFit"/>
           <view class="name-arrow">
             <view class="name">解绑</view>
-            <image class="arrow" src="https://images.charmingkamly.cn/system/arrow.png" mode="aspectFit"/>
+            <image class="arrow" src="https://images.charmingkamly.cn/system/arrow.png" mode="aspectFit"  bindtap="clickUnbinding" />
           </view>
         </view>
         <view class="item">
@@ -159,7 +159,7 @@
 <script>
   import wepy from 'wepy'
   import util from '../utils/util'
-  import {apiFetchGetUserInfoRedux} from '../redux/user/actions'
+  import {apiFetchGetUserInfoRedux, apiFetchUnbindingEmailRedux} from '../redux/user/actions'
   import store from '../store'
   import {connect, setStore} from 'wepy-redux'
   import loadingComponent from '../components/loadingComponent'
@@ -219,8 +219,25 @@
         const that = this
         await util.wxGoTo.navigateTo(`./show?id=${that.id}`)
       },
+      // 点击浏览记录
       async clickBrowses () {
         await util.wxGoTo.navigateTo(`./browse`)
+      },
+      // 点击解绑
+      async clickUnbinding () {
+        const showModal = await util.wxToast.showModal('重要提醒', '再次确认是否需要解绑哦，别抛弃人家嘛~', true)
+        if (showModal) {
+          const res = await store.dispatch(apiFetchUnbindingEmailRedux({
+            token: wepy.getStorageSync('token')
+          }))
+          const isSuccess = await util.common.isSuccessPromise(res.data)
+          if (isSuccess) {
+            // 解绑成功
+            util.wxToast.success(1000, res.data.message)
+            wepy.removeStorageSync('token')
+            util.wxGoTo.switchTab('./index')
+          }
+        }
       }
     }
 
