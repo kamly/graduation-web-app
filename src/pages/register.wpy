@@ -46,7 +46,7 @@
 <template>
   <view class="index-container">
     <view class="content-container">
-      <view>Hello {{userInfoFromWeApp.gender == 1 ? 'Boy' : 'Girl' }} ！</view>
+      <view>Hello <open-data type="userGender"></open-data> ！</view>
     </view>
     <view class="input-container">
       <input class="input input-email" placeholder="邮箱" value="{{inputEmail}}" bindblur="inputEmail"/>
@@ -54,7 +54,7 @@
              type="password"/>
     </view>
     <view class="bottom-container">
-      <button class="bottom" type="default" bindtap="clickBinding"> 绑定 </button>
+      <button  open-type="getUserInfo" class="bottom" bindgetuserinfo="clickBinding"> 绑定 </button>
     </view>
   </view>
 </template>
@@ -73,25 +73,21 @@
       disableScroll: true
     }
     data = {
-      userInfo: '', // 用户信息
+      token: '', // token
       inputEmail: '', // 用户输入的邮箱
       inputPassword: '', // 用户输入的密码
-      userInfoFromWeApp: '' // 用户信息来自小程序
+      userInfo: '' // 用户信息来自小程序
     }
     async onLoad() {
       const that = this
 
-      // 获取用户信息
-      const userInfoFromWeApp = await util.wxGetInfo.getUserInfoPromise()
-      that.userInfoFromWeApp = userInfoFromWeApp.userInfo
-
       // 检查有storage中有没有bindingEmailUserInfo
-      if (!wepy.getStorageSync('bindingEmailUserInfo')) {
+      if (!wepy.getStorageSync('token')) {
         util.wxGoTo.switchTab('./index')
       }
       // 获取storage中有没有bindingEmailUserInfo，并且删除
-      that.userInfo = wepy.getStorageSync('bindingEmailUserInfo')
-      wepy.removeStorageSync('bindingEmailUserInfo')
+      that.token = wepy.getStorageSync('token')
+      wepy.removeStorageSync('token')
 
       that.$apply()
     }
@@ -110,18 +106,29 @@
       },
 
       // 点击绑定
-      async clickBinding () {
+      async clickBinding (event) {
         const that = this
+        that.userInfo = event.detail
+        if (util.common.isEmpty(that.userInfo)) {
+          util.wxToast.loading('500', '获取信息失败')
+          return
+        }
+
         // 不能为空
         if (util.common.isEmpty(that.inputEmail) || util.common.isEmpty(that.inputPassword)) {
           util.wxToast.loading('500', '请输入邮箱或者密码')
+          return
         }
 
         // 进行绑定
         const res = await store.dispatch(apiFetchBindingEmailRedux({
-          userInfo: that.userInfo,
+          token: that.token,
           email: that.inputEmail,
-          password: that.inputPassword
+          password: that.inputPassword,
+          rawData: that.userInfo.rawData,
+          signature: that.userInfo.signature,
+          encryptedData: that.userInfo.encryptedData,
+          iv: that.userInfo.iv
         }))
 
         // 判断有误错误
@@ -129,11 +136,10 @@
         if (isSuccess) {
           // 写入storage
           wepy.setStorageSync('token', res.data.message.token)
+          wepy.setStorageSync('getInfoData', true)
           // 弹出提示
-          await util.wxToast.success(10000)
+          await util.wxToast.success(1000)
           await util.wxGoTo.switchTab('./index')
-        } else {
-          util.wxToast.showModal('错误提示', res.data.message, false)
         }
       }
     }

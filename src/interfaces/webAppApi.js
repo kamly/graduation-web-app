@@ -5,8 +5,8 @@ export default class API {
   /**
    * 获取token
    */
-  static getToken(code, rawData, signature, encryptedData, iv) {
-    return wxNet.sendRequest({}, `${Config.HOST.ZD}/webapp/token`, 'POST', {code, rawData, signature, encryptedData, iv})
+  static getToken(code) {
+    return wxNet.sendRequest({}, `${Config.HOST.ZD}/webapp/token`, 'POST', {code})
   }
 
   /**

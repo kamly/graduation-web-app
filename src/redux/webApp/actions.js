@@ -17,11 +17,11 @@ export const actions = createActions({
 // 获取token ok
 export function apiFetchGetTokenRedux(data) {
 
-  const {code, rawData, signature, encryptedData, iv} = data;
+  const {code} = data;
 
   return async function (dispatch) {
     dispatch(actions.fetchGetTokenReq())
-    const res = await webAppApi.getToken(code, rawData, signature, encryptedData, iv)
+    const res = await webAppApi.getToken(code)
     if (isSuccess(res.data)) {
       dispatch(actions.fetchGetTokenRcv({res}))
     } else {
@@ -31,7 +31,7 @@ export function apiFetchGetTokenRedux(data) {
   }
 }
 
-// 获取token ok
+// 创建二维码B接口 ok
 export function apiFetchCreateQrcodebRedux(data) {
 
   const {token, scene, page, width} = data;

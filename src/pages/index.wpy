@@ -537,23 +537,17 @@
 
       // 获取token
       const code = await util.wxGetInfo.loginPromise()
-      const userInfo = await util.wxGetInfo.getUserInfoPromise()
       const res = await store.dispatch(apiFetchGetTokenRedux({
-        code: code.code,
-        rawData: userInfo.rawData,
-        signature: userInfo.signature,
-        encryptedData: userInfo.encryptedData,
-        iv: userInfo.iv
+        code: code.code
       }))
 
       const isSuccess = await util.common.isSuccessPromise(res.data)
       if (isSuccess) {
         const token = res.data.message.token
-        const userInfo = res.data.message.userInfo
-        if (token) {
-          // 写入storage
-          wepy.setStorageSync('token', token)
+        wepy.setStorageSync('token', token) // 写入storage
 
+        const isOldUser = res.data.message.isOldUser
+        if (isOldUser) {
           // 加载热门数据
           await that.pullSearchContent()
           // 加载图片数据
@@ -567,36 +561,44 @@
 
           // 关闭loading动画
           that.isLoading = false
-          that.$apply()
-        } else if (userInfo) { // 跳转绑定界面
-          wepy.setStorageSync('bindingEmailUserInfo', userInfo)
-          util.wxGoTo.redirectTo('./register')
+        } else { // 跳转绑定界面
+          util.wxGoTo.navigateTo('./register')
         }
+        that.$apply()
       }
     }
 
     async onShow() {
+      const that = this
       const token = wepy.getStorageSync('token')
+      const getInfoData = wepy.getStorageSync('getInfoData')
       if (util.common.isEmpty(token)) {
         // 获取token
         const code = await util.wxGetInfo.loginPromise()
-        const userInfo = await util.wxGetInfo.getUserInfoPromise()
         const res = await store.dispatch(apiFetchGetTokenRedux({
-          code: code.code,
-          rawData: userInfo.rawData,
-          signature: userInfo.signature,
-          encryptedData: userInfo.encryptedData,
-          iv: userInfo.iv
+          code: code.code
         }))
+        const token = res.data.message.token
+        wepy.setStorageSync('token', token) // 写入storage
 
-        const isSuccess = await util.common.isSuccessPromise(res.data)
-        if (isSuccess) {
-          const token = res.data.message.token
-          if (token) {
-            // 写入storage
-            wepy.setStorageSync('token', token)
-          }
-        }
+        util.wxGoTo.navigateTo('./register')
+      } else if (getInfoData === true) {
+        wepy.removeStorageSync('getInfoData')
+
+        // 加载热门数据
+        await that.pullSearchContent()
+        // 加载图片数据
+        await that.getIndexImage(5)
+        // 加载数据  动态数据
+        await that.pullData(0, 1)
+        // 加载数据  热门数据
+        await that.pullData(1, 1)
+        // 加载数据  专题数据
+        await that.pullData(2, 1)
+
+        // 关闭loading动画
+        that.isLoading = false
+        that.$apply()
       }
     }
 

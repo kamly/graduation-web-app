@@ -5,8 +5,8 @@ export default class API {
   /**
    * 绑定邮箱
    */
-  static bindingEmail(userInfo, email, password) {
-    return wxNet.sendRequest({}, `${Config.HOST.ZD}/user/bindingEmail`, 'POST', {userInfo, email, password})
+  static bindingEmail(token, email, password, rawData, signature, encryptedData, iv) {
+    return wxNet.sendRequest({}, `${Config.HOST.ZD}/user/bindingEmail`, 'POST', {token, email, password, rawData, signature, encryptedData, iv})
   }
 
   /**

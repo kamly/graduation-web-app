@@ -73,14 +73,14 @@ export const actions = createActions({
 })
 
 // 绑定 ok
-// token, userInfo 不使用state获取，因为已经存储在Storage里面了
+// token 不使用state获取，因为已经存储在Storage里面了
 export function apiFetchBindingEmailRedux(data) {
 
-  const {userInfo, email, password} = data;
+  const {token, email, password, rawData, signature, encryptedData, iv} = data;
 
   return async function (dispatch) {
     dispatch(actions.fetchBindingEmailReq())
-    const res = await userApi.bindingEmail(userInfo, email, password)
+    const res = await userApi.bindingEmail(token, email, password, rawData, signature, encryptedData, iv)
     if (isSuccess(res.data)) {
       dispatch(actions.fetchBindingEmailRcv({res}))
     } else {

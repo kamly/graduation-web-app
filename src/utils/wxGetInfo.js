@@ -14,7 +14,7 @@ function loginPromise() {
   })
 }
 
-// 获取用户信息
+// 获取用户信息 被微信废弃
 function getUserInfoPromise() {
   return new Promise(function (resolve, reject) {
     wx.getUserInfo({
