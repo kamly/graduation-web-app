@@ -581,7 +581,10 @@
         const token = res.data.message.token
         wepy.setStorageSync('token', token) // 写入storage
 
-        util.wxGoTo.navigateTo('./register')
+        const isOldUser = res.data.message.isOldUser
+        if (!isOldUser) {
+          util.wxGoTo.navigateTo('./register')
+        }
       } else if (getInfoData === true) {
         wepy.removeStorageSync('getInfoData')
 

@@ -308,11 +308,13 @@
       <view class="share-list {{showShareActionSheet?'active':''}}">
         <button class="share-item" open-type="share">转发</button>
           <button class="share-item" bindtap="clickCreateQRCode">生成二维码</button>
-        <button class="share-item" bindtap="clickMomentsShare">生成朋友圈分享图</button>
+          <button class="share-item" bindtap="clickMomentsShare">生成朋友圈分享图</button>
       </view>
 
-      <canvas canvas-id="QrcodeWithAvatarCanvas" style="width: 430px;height: 430px;position: absolute;left: -999999px;top: -999999px;" />
-      <canvas canvas-id="MomentShareImageCanvas" style="width: 580rpx;height: 580rpx;position: absolute;left: -999999px;top: -999999px;" />
+      <canvas canvas-id="QrcodeWithAvatarCanvas"
+              style="width: 430px;height: 430px;position: absolute;left: -99999999px;top: -99999999px;" />
+      <canvas canvas-id="MomentShareImageCanvas"
+              style="width: 299px;height: 482px;position: absolute;left: -99999999px;top: -99999999px;" />
 
     </view>
 </template>
@@ -395,7 +397,7 @@
               return false
             }
             // TODO 优化
-            wx.getShareInfo({
+            wepy.getShareInfo({
               shareTicket: shareTickets[0],
               success: function(res) {
                 console.log(res)
@@ -492,10 +494,10 @@
 
         // 转发朋友圈
         async clickMomentsShare() {
-          // const that = this
-          // const qrcodeWithAvatar = await that.createQrcodeWithAvatar(that.id)
-          // const momentShareImage = await that.createMomentShareImage(qrcodeWithAvatar)
-          // util.wxGetInfo.previewImagePromise(momentShareImage)
+          const that = this
+          const qrcodeWithAvatar = await that.createQrcodeWithAvatar(that.id)
+          const momentShareImage = await that.createMomentShareImage(qrcodeWithAvatar)
+          util.wxGetInfo.previewImagePromise(momentShareImage)
         },
 
         // 隐藏分享菜单栏
@@ -636,12 +638,65 @@
       // 合成分享朋友圈的图片 qrcode background
       // return tempFilePath
       async createMomentShareImage (qrcodeWithAvatar) {
+        const that = this
         // 下载背景图片
         // 绘图
         const ctx = wepy.createCanvasContext('MomentShareImageCanvas')
+
+        // 背景
+        const shareTempFile = await wxNet.downloadFilePromise('https://images.charmingkamly.cn/system/share.jpg')
+        ctx.drawImage(shareTempFile.tempFilePath, 0, 0, 299, 482)
+        ctx.draw()
+
+        // 文字
+        ctx.font = '20px 宋体'
+        ctx.fillStyle = '#050F02'
+        ctx.textAlign = 'center'
+        console.log(that.showPost.title.length)
+        if (that.showPost.title.length > 10) {
+          const title = that.showPost.title.substring(0, 10)
+          ctx.fillText(title, 150, 120)
+          ctx.fillText('.....', 150, 150)
+        } else {
+          ctx.fillText(that.showPost.title, 150, 120)
+        }
+
+        // 头像
+        ctx.drawImage(qrcodeWithAvatar, 0, 0, 2000, 2000, 85, 180, 200, 200)
+        ctx.draw(true)
+
         // 输出
         const momentShareImage = await util.wxGetInfo.canvasToTempFilePathPromise('MomentShareImageCanvas')
         return momentShareImage.tempFilePath
+      }
+
+      /**
+       * canvas 自动换行
+       * @param ctx
+       * @param text
+       * @param x
+       * @param y
+       * @param maxWidth
+       * @param lineHeight
+       */
+      wrapText (ctx, text, x, y, maxWidth, lineHeight) {
+        // 字符分隔为数组
+        var arrText = text.split('')
+        var line = ''
+
+        for (var n = 0; n < arrText.length; n++) {
+          var testLine = line + arrText[n]
+          var metrics = ctx.measureText(testLine)
+          var testWidth = metrics.width
+          if (testWidth > maxWidth && n > 0) {
+            ctx.fillText(line, x, y)
+            line = arrText[n]
+            y += lineHeight
+          } else {
+            line = testLine
+          }
+        }
+        ctx.fillText(line, x, y)
       }
     }
 </script>

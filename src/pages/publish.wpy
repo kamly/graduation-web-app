@@ -156,6 +156,14 @@
         } else if (that.type === 'reply') {
           await that.getShowComment()
         }
+      } else {
+        that.title = ''
+        that.des = ''
+        that.content = ''
+        that.images = []
+        that.imagesId = []
+        that.limitImage = false
+        that.disableSend = false
       }
 
       // 关闭loading动画
