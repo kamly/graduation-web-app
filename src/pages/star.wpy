@@ -73,7 +73,7 @@
           </view>
 
           <view class="fan-unfan">
-            <block wx:if="{{item.hasStar}}">
+            <block wx:if="{{!item.hasStar}}">
               <image class="icon" src="https://images.charmingkamly.cn/system/stared.png" mode="aspectFit"/>
             </block>
             <block wx:else>
